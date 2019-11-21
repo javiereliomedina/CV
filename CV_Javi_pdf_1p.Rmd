@@ -1,7 +1,7 @@
 ---
 name: Javier Elío
 date: "`r format(Sys.time(), '%B, %Y')`"
-qualifications: Ph.D
+qualifications: Ph.D.
 address: Haugesund (Norway)
 phone: +47 4125 91 17
 email: javiereliomedina@gmail.com
@@ -13,6 +13,7 @@ output: vitae::awesomecv
 header-includes:
   - \usepackage{colortbl}
   - \arrayrulecolor{white}
+  - \photo[circle, noedge, left]{CV_Javier_Elio.png}
 ---
 
 ```{r setup, include = FALSE}
@@ -23,6 +24,7 @@ library(tidyverse)
 library(RefManageR)
 library(knitr)
 library(kableExtra)
+library(vitae)
 source("CV_Table.R")
 
 ```
@@ -49,9 +51,9 @@ readxl::read_excel("CV_Elio.xlsx", sheet = "Experience") %>%
 ```{r Services, results = 'asis'} 
 tribble(
   ~Year, ~Institution, ~Role,
-  "2018/19", "\\textbf{International Atomic Energy Agency (IAEA)}", "Expert missions on Radon Mapping and National Radon Action Plans: Peru (August 2018), Cyprus (October 2018), Lithuania (July 2019).",
+  "2018/19", "\\textbf{International Atomic Energy Agency (IAEA)}", "Expert missions on Radon Mapping and National Radon Action Plans: Peru (August 2018), Cyprus (October 2018), Lithuania (July 2019)",
   
-  "2018", "\\textbf{European Commission, Joint Research Centre (JRC)}", "Invite as an expert to the meeting -Working Group Meeting on Indoor Radon Dose- (May 2018, Ispra, Italy)."
+  "2018", "\\textbf{European Commission, Joint Research Centre (JRC)}", "Invite as an expert to the meeting -Working Group Meeting on Indoor Radon Dose- (May 2018, Ispra, Italy)"
   ) %>% 
   mutate(Details = str_c(Institution, Role, sep = ", ")) %>%
   select(Year, Details) %>%
@@ -75,6 +77,4 @@ readxl::read_excel("CV_Elio.xlsx", sheet = "Awards") %>%
   select(Year, Details) %>%
   CV_Table()
 ```
-
-
 
