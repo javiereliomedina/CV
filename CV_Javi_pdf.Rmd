@@ -14,7 +14,7 @@ header-includes:
   - \usepackage{fancyhdr}
   - \definecolor{Col_title}{HTML}{DC3522}
   - \definecolor{Col_sub_title}{HTML}{00A388}
-  - \geometry{left=1.9cm, top=2.54cm, right=1.9cm, bottom=2.5cm, footskip=.5cm}
+  - \geometry{left = 1.9cm, top = 1.95cm, right = 1.9cm, bottom = 1.9cm, footskip = .5cm}
   - \usepackage{tcolorbox}
   - \definecolor{light-yellow}{rgb}{1, 0.95, 0.7}
   - \newtcolorbox{mybox}{colback = light-yellow, boxrule = 0pt, boxsep = 0pt}
