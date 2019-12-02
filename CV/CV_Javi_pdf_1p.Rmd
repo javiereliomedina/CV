@@ -1,0 +1,80 @@
+---
+name: Javier Elío
+date: "`r format(Sys.time(), '%B, %Y')`"
+qualifications: Ph.D.
+address: Haugesund (Norway)
+phone: +47 4125 91 17
+email: javiereliomedina@gmail.com
+website: researchgate.net/profile/Javier_Elio
+github: javiereliomedina
+linkedin: javiereliomedina
+twitter: Elio_Javi
+output: vitae::awesomecv
+header-includes:
+  - \usepackage{colortbl}
+  - \arrayrulecolor{white}
+  - \photo[circle, noedge, left]{CV_Javier_Elio.png}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      warning = FALSE,
+                      message = FALSE)
+library(tidyverse)
+library(RefManageR)
+library(knitr)
+library(kableExtra)
+library(vitae)
+source("CV_Table.R")
+
+```
+
+# Education
+```{r Education,  results = 'asis'}
+readxl::read_excel("CV_Elio.xlsx", sheet = "Education") %>%
+  mutate(Degree = str_c("\\textbf{", Degree, "}")) %>%
+  mutate(Details = str_c(Degree, Institution, Where, sep = ", ")) %>%
+  select(Year, Details) %>%
+  CV_Table()  
+```
+
+# Experience
+```{r experience, results = 'asis'}
+readxl::read_excel("CV_Elio.xlsx", sheet = "Experience") %>%
+  mutate(Role = str_c("\\textbf{", Role, "}")) %>%
+  mutate(Details = str_c(Role, Company, Where, sep = ", ")) %>%
+  select(Year, Details) %>%
+  CV_Table() 
+```
+
+# Professional Services
+```{r Services, results = 'asis'} 
+tribble(
+  ~Year, ~Institution, ~Role,
+  "2018/19", "\\textbf{International Atomic Energy Agency (IAEA)}", "Expert missions on Radon Mapping and National Radon Action Plans: Peru (August 2018), Cyprus (October 2018), Lithuania (July 2019)",
+  
+  "2018", "\\textbf{European Commission, Joint Research Centre (JRC)}", "Invite as an expert to the meeting -Working Group Meeting on Indoor Radon Dose- (May 2018, Ispra, Italy)"
+  ) %>% 
+  mutate(Details = str_c(Institution, Role, sep = ", ")) %>%
+  select(Year, Details) %>%
+  CV_Table()
+  
+```
+
+# Professional memberships
+```{r memberships, results = 'asis'}
+readxl::read_excel("CV_Elio.xlsx", sheet = "Memberships") %>%
+  mutate(Role = str_c("\\textbf{", Role, "}"),
+         Details = str_c(Role, Institution, Where, sep = ", ")) %>%
+  select(Year, Details) %>%
+  CV_Table() 
+```
+# Honours and Awards
+```{r awards, results = 'asis'}
+readxl::read_excel("CV_Elio.xlsx", sheet = "Awards") %>%
+  mutate(Name = str_c("\\textbf{", Name, "}"),
+         Details = str_c(Name, Details, Where, sep = ", ")) %>%
+  select(Year, Details) %>%
+  CV_Table()
+```
+
