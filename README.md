@@ -15,4 +15,4 @@ Then the R session must be restarted, and for double checking that the Key was c
 Sys.getenv("ORCID_TOKEN")
 ```
 
-I have also uploaded a general Cover Letter, with the same format. 
+I have also uploaded a general **Cover Letter**, with the same format. 
