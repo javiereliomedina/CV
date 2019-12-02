@@ -6,7 +6,7 @@ First of all I got my ORCID API Key and save it in .Renviron, that way I can run
 
 ```
 orcid_auth()               # API key (without Bearer)
-usethis::edit_r_environ()  # Open up the Renviron file save the key as: ORCID_TOKEN="yourkey"
+usethis::edit_r_environ()  # Open .Renviron file, and save the key as: ORCID_TOKEN="yourkey"
 ```
 
 Then the R session must be restarted, and for double checking that the Key was correctly saved I run:
