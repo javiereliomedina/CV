@@ -1,0 +1,62 @@
+---
+name: Javier 
+surname: Elío
+date: "`r format(Sys.time(), '%B, %Y')`"
+position: Researcher | Environemntal sciences | Data Sciences
+address: Haugesund (Norway)
+phone: +47 4125 91 17
+email: javiereliomedina@gmail.com
+website: researchgate.net/profile/Javier_Elio
+github: javiereliomedina
+linkedin: javiereliomedina
+twitter: Elio_Javi
+output: vitae::awesomecv
+
+header-includes:
+  - \photo[circle, noedge, left]{CV_Javier_Elio.png}
+  - \usepackage{colortbl}
+  - \definecolor{darktext}{HTML}{414141}
+  - \definecolor{text}{HTML}{333333}
+  - \definecolor{graytext}{HTML}{5D5D5D}
+  - \definecolor{lighttext}{HTML}{999999}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      warning = FALSE,
+                      message = FALSE)
+library(vitae)
+```
+
+\vspace{-0.1cm}
+\footnotesize 
+\rightline{\textcolor{darktext}{"Expert on environmental research, statistics, spatial data analysis, and modelling."}} 
+\normalsize
+
+\vspace{1.25cm} \rightline{\textcolor{graytext}{\today}}
+
+\vspace{-0.5cm}  **TARDIS**    \
+\textcolor{graytext}{The Stone Age}     \
+\textcolor{graytext}{London}             
+
+\vspace{0.25cm}\textbf{\underline{An Unearthly Child}}  
+\vspace{0.15cm} \textcolor{graytext}{Dear Dr. Who,}
+
+# About Me
+\vspace{-0.15cm}
+I am a Mining Engineer, with an MSc in Environmental Research, Modelling and Risk Assessment, and a PhD in Environmental Sciences. For the last years, I have been working on radon mapping at the Geology Department at Trinity College Dublin, although I have also experience in monitoring geological storage of $CO_2$, and in geochemical characterization of contaminated sites. Nowadays, I am collaborating with the research group "Applied Marine Microbiology” at Høgskulen på Vestlandet (Haugesund, Norway). Previously to my research career, I worked about two and a half years as a Tunnel Engineer at Obrascón Huarte Lain S.A. (OHL) on a railway tunnel construction of 9.5 km. During this job I developed my skills and competences to schedule project activities, manage a large multidisciplinary team, communicate in a business environment and use effective information to solve problems.   
+
+# Environmental sciences expertise
+\vspace{-0.15cm}
+I specialised in environmental research, modelling, and risk assessment. During my Master’s I studied all aspects related with the characterization of contaminated sites, human health risk assessment, and simulation of contamination processes of soil, water and atmosphere. This has provided me the ability to analyse several environmental issues, and together to my previous experience as engineer, it forms a solid background to fulfil myself in a wide range of different topics. In this regard I have performed outstanding professional activities, as it is shown by the awards I have received, in the fields of radon research and in monitoring the environmental problems associated to the geological storage of $CO_2$. I have demonstrated therefore leadership, teamwork skill-sets, flexible attitude towards work, and open-mind to learn new techniques and methods. I can make  a strong contribution to the objectives of any company dealing with environmental issues. 
+
+# Data analysis expertise
+\vspace{-0.15cm} 
+I have demonstrated considerable experience in the interpretation of large datasets. I am an expert in statistics, spatial data analysis and geostatistics, having published several articles which demonstrate my competences in the area. In the last one, for example, I tested four interpolation techniques for producing the first Pan-European indoor radon map. I have also performed logistic regression for predicting the probability of having high indoor radon concentrations, or Monte-Carlo simulations for uncertainty analysis. I have also experience on multivariate analysis, principal component analysis, cluster analysis, and more recently on machine learning methods. I can apply these knowledge for further develop the digital competences of your research group, and I will enhance its capacity to analyse large amount of data.
+
+Sincerely,
+
+\vspace*{0.25cm} **Javier Elío**
+
+\vspace*{0.5cm} Attached: Curriculum Vitae
+
