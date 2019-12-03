@@ -13,7 +13,7 @@ twitter: Elio_Javi
 output: vitae::awesomecv
 
 header-includes:
-  - \photo[circle, noedge, left]{CV_Javier_Elio.png}
+  - \photo[circle, noedge, left]{photo.png}
   - \usepackage{colortbl}
   - \definecolor{darktext}{HTML}{414141}
   - \definecolor{text}{HTML}{333333}
