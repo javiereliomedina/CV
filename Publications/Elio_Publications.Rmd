@@ -1,0 +1,269 @@
+---
+name: Javier 
+surname: Elío
+date: "`r format(Sys.time(), '%B, %Y')`"
+position: Researcher | Environemntal sciences | Data Sciences
+address: Haugesund (Norway)
+phone: +47 4125 91 17
+email: javiereliomedina@gmail.com
+website: https://javierelio.netlify.com/
+github: javiereliomedina
+linkedin: javiereliomedina
+twitter: Elio_Javi
+output: vitae::awesomecv
+header-includes:
+  - \usepackage{colortbl}
+  - \arrayrulecolor{white}
+  - \photo[circle, noedge, left]{photo.png}
+  - \definecolor{darktext}{HTML}{414141}
+  - \definecolor{blue}{rgb}{0.0, 0.0, 1.0}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      warning = FALSE,
+                      message = FALSE)
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(rorcid)
+library(rcrossref)
+  
+source("CV_Table.R")
+source("Escape_Latex_Specials.R")
+```
+
+```{r ORCID_Works}
+# Get ORCID API Key and save it in Renviron  
+# orcid_auth()               # API key (without Bearer)
+# usethis::edit_r_environ()  # Open up the Renviron file
+# save the key as: ORCID_TOKEN="yourkey"
+# Restart the R session
+# We can see the key with Sys.getenv("ORCID_TOKEN")
+
+# When possible I choose "Scopus - Elsevier" as the "Preferred Source" and delate the rest
+# that way all articles will have the same format
+
+# Get works
+  id <- "0000-0003-0624-2345"
+  out <- works(orcid_id(id)) 
+  wks <- orcid_works(id, out$`put-code`)
+  
+# Extract publication information 
+  Authors <- vector()
+  for (i in seq_along(wks[[id]]$works$work.contributors.contributor)) {
+    Authors[[i]] <-str_c(wks[[id]]$works$work.contributors.contributor[[i]]$`credit-name.value`, collapse = "; ")
+  }
+  
+  DOI <- vector()
+  for (i in seq_along(wks[[id]]$works$work.contributors.contributor)) {
+    DOI[[i]] <- wks[[id]]$works$`work.external-ids.external-id`[[i]]$`external-id-value`[1]
+  }
+  
+  pubs <- tibble(Type = wks[[id]]$works$work.type,
+                 Year = wks[[id]]$works$`work.publication-date.year.value`,
+                 Authors = Authors,
+                 Title = wks[[id]]$works$work.title.title.value,
+                 Journal = wks[[id]]$works$`work.journal-title.value`,
+                 DOI = DOI) %>%
+    distinct(DOI, .keep_all = TRUE) %>% 
+    mutate(DOI = replace(DOI, DOI == "2-s2.0-84899952872", "10.30955/gnj.001242"), 
+           DOI = replace(DOI, DOI == "2-s2.0-84899963838", "10.30955/gnj.001241"),
+           Authors = str_replace_all(Authors, "Elio", "Elío"),
+           Authors = str_replace_all(Authors, "de Elío", "Elío")) %>%
+    filter(Type == "journal-article" | Type == "book")      
+  
+# Add volume and pages 
+  VP <- rcrossref::cr_cn(dois = pubs$DOI, format = "bibtex")
+  
+  pubs <- pubs %>%
+    mutate(Volume = str_match(VP, "volume = \\{(.*[0-9])")[,2],
+           Pages = str_match(VP, "pages = \\{(.*[0-9])")[,2]) 
+# Remove latex symbols for knit
+  pubs <- pubs %>%
+    mutate(Authors = Escape_Latex_Specials(Authors),
+           Title   = Escape_Latex_Specials(Title),
+           Journal = Escape_Latex_Specials(Journal),
+           DOI     = Escape_Latex_Specials(DOI))
+```
+  
+```{r GS}
+My_GS <- scholar::get_profile("NF5SYm8AAAAJ&hl")
+```
+
+```{r Invited_talks_table, results = 'asis'}
+
+Talks <- tribble(~Year, ~Authors, ~Title, ~Conference, ~Uni, ~Country,
+
+2020, "Elío J.", "Methodology behind the first Pan-European Indoor Radon Map", "Technical solutions for displaying and communicating indoor radon data - European Radon Week 2020", "Joint Research Centre (JRC) - European Commission", "AT", 
+
+#2016,	"Elío J.", "Modelling Indoor Radon Concentration: Towards a High-Resolution Indoor Radon Map of Ireland", "Michaelmas Semester 2016, Geology Seminar Series", "Trinity College Dublin", "IE", 
+
+2016, "Elío J.", "Groundtruthing Tellus High Radon Areas", "Geoscience 2016 Conference", "Geological Survey of Ireland", "IE", 
+
+2016, "Elío J.", "Radon potential classification using in-situ radon soil-gas measurements", "Tellus meeting. Unearthed - Impacts of the Tellus surveys of the north of Ireland", "Geological Survey of Ireland", "IE" )
+
+                 
+```
+
+
+```{r Conferences_table, results = 'asis'}
+
+Conferences <- tribble(~Year, ~Authors, ~Title, ~Conference, ~Country,
+
+2020, "Bossew P., Janik M., Petermann E., Elío J.", "Machine learning in environmental radon science", " International Committee for Radionuclide Metrology, Low-Level Radioactivity Measurement Techniques - ICRM-LLRMT 2020", "IT",
+
+2020, "Fernandez Anez N., Meyer A., Elío J., Kleppe G., Hagen B.C., Frette V.", "Behaviour of smouldering fires during periodic refilling of wood pellets into silos", "13th International Symposium on Hazards, Prevention, and Mitigation of Industrial Explosions - ISHPMIE", "DE",
+
+2019,	"Bossew P., Cinelli G., Ciotoli GC., Crowley Q., De Cort M., Elío J., Gruber V., Petermann E., Tollefsen T.", "Development of a geogenic radon hazard index GRHI", "3rd International Conference Radon in the Environment", "PL",
+
+2019,	"Elío J., Bossew P., Cinelli G., De Cort M., Garcia-Talavera M., Gruber V., Gutiérrez Villanueva JL., Iurlaro G., Tollefsen T., Udovicic V.", "Advances in the European Indoor Radon Map, towards a European Indoor Radon Dose Map", "EGU General Assembly 2019", "AT",
+
+2018,	"Cinelli G., Bossew P., Elío J., Gruber V., Braga R., Nogarotto A., Petterman E., Tollefsen T., De Cort M.", "Analysis of the European Atlas of Natural Radiation data within geological and soil units", "14th International workshop on the geological aspects on radon risk mapping – GARRM", "CZ",
+
+2018, "Elío J., Crowley Q., Scanlon R., Hodgson J., Gallagher V., Long S., Cooper M.", "Correlation between topsoil geochemistry and indoor radon concentration", "12th Conference on Geostatistics for Environmental Applications – geoENV2018", "UK", 
+
+2018, "Bossew P., Cinelli G., Tollefsen T., Gruber V., De Cort M., García-Talavera M., Elío J.", "From the European Indoor Radon Concentration Map to a European Indoor Radon Dose Map", "VI. Terrestrial Radioisotopes in Environment International Conference on Environmental Protection", "HU",
+
+2018,	"Elío J., Crowley Q., Scanlon R., Hodgson J., Long S., Zgaga L., Bossew P.", "Utilizing multiple approaches for the definition of radon priority areas", "EGU General Assembly 2018", "AT",
+
+2018,	"Hodgson J., Bossew P., Elío J., Crowley Q.", "Airborne gamma spectrometry as predictor of indoor radon concentration and radon priority areas", "EGU General Assembly 2018", "AT",
+
+2018,	"Crowley Q., Elío J., Lehne R., Militzer A., Ciotoli G., McKinley J., Cinelli G., Bossew P.", "Tectonically enhanced geogenic radon", "EGU General Assembly 2018", "AT",
+
+2017,	"Elío J., Crowley Q., Scanlon R., Hodgson, Long S.", "Detection of radon priority areas by in-situ radon soil-gas measurements: a case-study in the Cooley Peninsula (County Louth, Ireland)", "2nd International Workshop on the European Atlas of Natural Radiation - IWEANR", "IT",
+
+2017,	"Elío J., Crowley Q., Scanlon R., Hodgson, Long S. Cooper M.", "Mapping Natural Occurring Radioactive Materials (U, Th and K) in Ireland: implications for radon mapping", "2nd International Workshop on the European Atlas of Natural Radiation - IWEANR",  "IT", 
+
+2017,	"Elío J., Crowley Q., Scanlon R., Hodgson, Long S.", "Use of geological information to develop a high resolution indoor radon risk map of Ireland", "Third East-European Radon Symposium - TEERAS2017", "BG",
+
+2017,	"Elío J., Crowley Q., Scanlon R., Hodgson J., Long S.", "A new high-resolution radon map of Ireland", "60 Irish Geological Research Meeting", "IE",
+
+2016,	"Elío J., Crowley Q., Scanlon R., Hodgson, Cooper M., Long S.", "Radon monitoring and hazard prediction in Ireland", "EGU General Assembly 2016", "AT", 
+
+2014,	"Elío J., Ortega M.F., Grandia F., Gasparini A., Caballero J., Sáinz A., Mazadiego L.F.", "Enhanced radon emission in natural CO2 flows in Campo de Calatrava region (central Spain)", "Third International Conference on Radioecology and Environmental Radioactivity", "ES",
+
+2013,	"Elío J., Ortega M.F., Mazadiego L.F., Caballero J., et al.", "Monitorización y verificación de un almacenamiento geológico de CO2. Aplicación de la monitorización superficial en la PDT de Hontomín, Burgos, España)", "XII reunión del Grupo Español del Carbón", "ES", 
+
+2013,	"Rincones M.A., Ortega M.F., Elío J., Gutierrez del Olmo J., et al.", "Atmospheric and remote sensing surveys evaluated at the natural analogue Campo de Calatrava and its relation with isotopic Radon activity and CO2 flux as strategy for CCS projects", "Congreso Ibérico - XI Congreso nacional de Geoquímica", "ES",
+
+2013,	"Ortega M.F., Rincones M., Elío J., Gutiérrez Del Olmo J., et al.", "Gas monitoring methodology and application to CCS projects as defined by atmospheric and remote sensing survey in the natural analogue of Campo de Calatrava", "13th International Conference on Environmental Science and Technology - CEST2013", "GR", 
+
+2013,	"Llamas B., Mazadiego L.F., Elío J., Ortega M.F., Grandia F.", "Systematic approach to selection of technologies of monitoring in projects for geological storage of CO2. Application of multiple criteria decision making", "13th International Conference on Environmental Science and Technology - CEST2013", "GR",
+
+2013,	"Nisi B., Vaselli O., Tassi F., Elío J., et al.", "Water chemistry at Hontomín-Huermeces (Burgos, Spain): insights for a pre-, intra- and post-CO2 injection geochemical monitoring", "EGU General Assembly 2013", "AT",  
+
+2013, 	"Grandía F., Elío J., Mazadiego L.F., Ortega M.F., Llamas J.F.", "Rn gas emission distribution in the soil-atmosphere interface: lessons learned from CO2 storage monitoring", "MoDeRn Monitoring in Geological Disposal of Radioactive Waste, objectives, strategies, technologies and public involvement", "LU",
+
+2012,	"Elío J., Ortega M.F., Caballero J., García-González J.E., et al.", "Baseline of soil CO2 flux in the Hontomin Site (Burgos, Spain)", "34th International Geological Congress", "AU",
+
+2012,	"Nisi B., Vaselli O., Elío J., Ortega M.F., et al.", "CO2 emission from two old mine drillings (Mt. Amiata, central Italy) as a possible example of storage and leakage of deep-seated CO2", "34th International Geological Congress", "AU",
+
+2012, 	"Mazadiego L.F., Grandia F., Elío J., Nissi B., et al.", "Baseline of soil-atmosphere CO2 flux in the Hontomin site (Burgos, Spain)", "Third EAGE CO2 Geological Storage Workshop. Understanding the Behaviour of CO2 in Geological Storage Reservoirs", "UK",
+
+2012,	"Grandia F., Mazadiego L.F., Elío J., Ortega M.F., Bruno J.", "Radon isotope measurements as a monitoring tool for CO2 leakage in geological storage", "AGU fall meeting 2011", "USA",  
+
+2011, 	"Grandia F., Elío J., Ortega M.F., Caballero J., Nisi B., et al.", "Baseline of CO2 fluxes in the PDT of Hontomín (Burgos, España)", "II coloquio Hispano-Francés sobre Almacenamiento Geológico de CO2", "ES", 
+
+2011,	"Nisi B., Vaselli O., Elío J., Ortega M.F., Caballero J., Tassi F.", "CO2 emission two old mine drillings in the Monte Amiata Area (Italy): can they be safely shut down?", "II Coloquio Hispano-Francés sobre Almacenamiento Geológico de CO2", "ES",  
+
+2011,	"Ortega M.F., Elío J., Caballero J., Mazadiego L.F., et al.", "Radon isotopes as a monitoring tool in CCS projects", "II Coloquio Hispano-Francés sobre Almacenamiento Geológico de CO2", "ES",
+
+2011,	"Rincones M.A., Iglesias L., García R., de la Vega R., Grandia F., Mazadiego L.F., Elío J., et al.", "Remote sensing techniques as a monitoring tool in geological CO2 storage", "II Coloquio Hispano-Francés sobre Almacenamiento Geológico de CO2", "ES",
+
+2011,	"Elío J., Ortega M.F., Caballero J., García-González J.E., et al.", "Caracterización geoquímica de la línea base de flujo de CO2 en la planta de almacenamiento geológico de Hontomín (Burgos, España)", "VIII Congreso Ibérico de Geoquímica-XVII Semana de Geoquímica", "PT", 
+
+2011, 	"Ortega M.F., Elío J., Caballero J., Vaselli O., et al.", "Estudio de análogos naturales de captura y almacenamiento de CO2: relación radón (222Rn) - torón (220Rn)", "VIII Congreso Ibérico de Geoquímica-XVII Semana de Geoquímica", "PT", 
+
+2011,	"Nisi B., Vaselli O., Elío J., Tassi F., et al.", "Geochemical monitoring of water discharges and dissolved gases in the CO2 injection site of Hontomin (Burgos, Spain)", "VIII Congreso Ibérico de Geoquímica-XVII Semana de Geoquímica", "PT",
+
+2011,	"Nisi B., Elío J., Vaselli O., Tassi F., Grandia F., Mazadiego L.F.", "Geochemical monitoring in the Hontomín (Burgos, Spain) injection site: preliminary results and perspectives", "EGU General Assembly 2011", "AT",  
+
+2010, 	"Vaselli O., Nisi B., Tassi F., Mazadiego L.F., Elío J., et al.", "Geochemical baseline characterization of the storage area around the injection site at Hontomín (Burgos, Spain)", "Coloquio Franco-Español sobre almacenamiento geológico de CO2", "FR", 
+
+2010,	"Vaselli O., Tassi F., Bicocchi G., Nisi B., Montegrossi G., Burgassi P., Grandia F., Elío J., Bruno J.", "Injection and extraction of CO2 - The role of the geochemical monitoring", "IGRS International Geo-Hazards Research Society, Scientific approach to GeoHazard: a window to the future, 2nd Symposium", "IT", 
+
+2009,	"Elío J., Ortega M.F., Chacón E., García J.E., de Miguel E., Mazadiego L.F.", "Aplicación de la medición de radón para la caracterización de suelos contaminados por NALP", "VII Congreso Ibérico-X Congreso Nacional de Geoquímica de Soria", "ES"
+)
+
+```
+ 
+ 
+\vspace{-0.1cm}
+\footnotesize 
+\rightline{\textcolor{darktext}{"Expert on environmental research, statistics, spatial data analysis, and modelling."}} 
+\normalsize
+
+\vspace{0.5cm}
+# Publications
+\vspace{-0.1cm}
+I have published **`r length(pubs$Type)`** peer-reviewed journal articles, chapters or books on Environmental Science topics. I have also presented my research at `r length(Talks$Title)` invited talks, and in several national and international conferences including AGU, EGU, EAGE, IGC and Goldschmidt. My metrics in **Google Scholar** are:
+
+\vspace{8pt}
++ Total citations: `r My_GS$total_cites`
++ h-index: `r My_GS$h_index`
++ i10-index: `r My_GS$i10_index`
+\vspace{8pt}
+
+## Peer reviewed articles
+\vspace{-0.1cm}
+```{r articles, results = 'asis'}
+pubs %>%
+  filter(Type == "journal-article") %>%
+  mutate(Authors = str_replace_all(Authors, "Elío", "\\\\textbf{Elío}"),  # Bold my surname
+         Volume = str_replace_na(Volume),   
+         Pages = str_replace_na(Pages), 
+         DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", DOI, "}",  sep = ""),
+         Details = str_c(Authors, Title, Journal, Volume, Pages, DOI, sep = ", "),
+         Details = str_replace(Details, "NA,", ""),
+         Details = str_c(Details, ". ")) %>%
+  select(Year, Details) %>%
+  arrange(desc(Year)) %>%
+  CV_Table()
+```
+
+\vspace{-0.5cm}
+## Book chapters
+\vspace{-0.1cm}
+```{r books, results = 'asis'}
+pubs %>%
+  filter(Type == "book") %>%
+  mutate(Authors = str_replace_all(Authors, "Elío", "\\\\textbf{Elío}"),
+         Volume = str_replace_na(Volume),   # remove NA for collapsing later the strine
+         Pages = str_replace_na(Pages), 
+         DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", DOI, "}",  sep = ""),
+         Details = str_c(Authors, Title, Journal, Volume, Pages, DOI, sep = ", "),
+         Details = str_replace(Details, "NA,", ""),
+         Details = str_c(Details, ". ")) %>%
+  select(Year, Details) %>%
+  arrange(desc(Year)) %>%
+  CV_Table()
+```
+
+\vspace{-0.5cm}
+## Invited talks
+\vspace{-0.1cm}
+```{r talks, results = 'asis'}
+Talks %>%
+  mutate(Authors = str_replace_all(Authors, "Elío", "\\\\textbf{Elío}"),  # Bold my surname
+         Details = str_c(Authors, Title, Conference, Uni, Country, sep = ", "),
+         Details = str_c(Details, ". ")) %>%
+  select(Year, Details) %>%
+  arrange(desc(Year)) %>%
+  CV_Table()
+```
+
+\vspace{-0.5cm}
+## Conferences
+\vspace{-0.1cm}
+```{r conferences, results = 'asis'}
+
+Conferences %>%
+  mutate(Authors = str_replace_all(Authors, "Elío", "\\\\textbf{Elío}"),  # Bold my surname
+         Details = str_c(Authors, Title, Conference, Country, sep = ", "),
+         Details = str_c(Details, ". ")) %>%
+  select(Year, Details) %>%
+  arrange(desc(Year)) %>%
+  CV_Table()
+
+```
