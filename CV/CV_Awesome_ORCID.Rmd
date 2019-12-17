@@ -6,7 +6,7 @@ position: Researcher | Environemntal sciences | Data Sciences
 address: Haugesund (Norway)
 phone: +47 4125 91 17
 email: javiereliomedina@gmail.com
-website: researchgate.net/profile/Javier_Elio
+website: https://javierelio.netlify.com/
 github: javiereliomedina
 linkedin: javiereliomedina
 twitter: Elio_Javi
@@ -107,8 +107,9 @@ My research interests are:
 +	Radon mapping;
 + Radon measurements in air, soil, and water;
 +	Natural radioactivity, Natural Occurrence Radioactive Materials (NORM);
-+	Statistics, spatial data analysis, and geostatistics (R language);
-+ Geographic information systems.
++	Statistics, spatial data analysis, and geostatistics;
++ Geographic information systems;
++ R language.
 
 # Education
 \vspace{-0.1cm}
