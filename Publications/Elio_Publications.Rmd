@@ -97,7 +97,7 @@ Talks <- tribble(~Year, ~Authors, ~Title, ~Conference, ~Uni, ~Country,
 
 2020, "Elío J.", "Methodology behind the first Pan-European Indoor Radon Map", "Technical solutions for displaying and communicating indoor radon data - European Radon Week 2020", "Joint Research Centre (JRC) - European Commission", "AT", 
 
-#2016,	"Elío J.", "Modelling Indoor Radon Concentration: Towards a High-Resolution Indoor Radon Map of Ireland", "Michaelmas Semester 2016, Geology Seminar Series", "Trinity College Dublin", "IE", 
+2016,	"Elío J.", "Modelling Indoor Radon Concentration: Towards a High-Resolution Indoor Radon Map of Ireland", "Michaelmas Semester 2016, Geology Seminar Series", "Trinity College Dublin", "IE", 
 
 2016, "Elío J.", "Groundtruthing Tellus High Radon Areas", "Geoscience 2016 Conference", "Geological Survey of Ireland", "IE", 
 
