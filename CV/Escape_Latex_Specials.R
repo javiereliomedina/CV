@@ -14,7 +14,7 @@ Escape_Latex_Specials <- function(x) {
   x <- gsub("}"           , ""     , x, fixed = T)
   x <- gsub("â\200"       , " - "  , x, fixed = T)
   x <- gsub("“H"          , " H"   , x, fixed = T)
-  x <- gsub("_"           , "\\_ " , x, fixed = T)
+  x <- gsub("_"           , "\\_" , x, fixed = T)
   x <- gsub(" <inf>"      , ""     , x, fixed = T)
   x <- gsub("</inf> -rich", "-rich", x, fixed = T)
   x <- gsub("<inf>"       , ""     , x, fixed = T)
