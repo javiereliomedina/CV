@@ -5,7 +5,7 @@ I have made my **CV** extracting all my personal information from ORCID, except 
 First of all I got my ORCID API Key and save it in .Renviron, that way I can run Rmarkdown without problems. 
 
 ```
-orcid_auth()               # API key (without Bearer)
+rorcid::orcid_auth()       # API key (without Bearer)
 usethis::edit_r_environ()  # Open .Renviron file, and save the key as: ORCID_TOKEN="yourkey"
 ```
 
