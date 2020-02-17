@@ -99,15 +99,13 @@ My_GS <- scholar::get_profile("NF5SYm8AAAAJ&hl")
 \vspace{0.5cm}
 # Career Summary
 \vspace{-0.1cm}
-I am a Mining Engineer, with an MSc in Environmental Research, Modelling and Risk Assessment, and a PhD in Environmental Sciences. For the last years, I have been working on radon mapping at the Geology Department at Trinity College Dublin. I have also experience in monitoring geological storage of $CO_{2}$, and in geochemical characterization of contaminated sites. 
+I am an engineer from the Technical University of Madrid (Spain) with 10+ years of experience in civil engineering, risk analysis and prevention, programming, and environmental sciences.I have done an MSc in Environmental Research, Modelling and Risk Assessment, and a PhD in Environmental Sciences. My degrees, and posterior professional development, have qualified me in a wide range of topics. I have worked on radon mapping, in monitoring geological storage of $CO_{2}$, and in geochemical characterization of contaminated sites. Recently I have started a postdoc in Geoinformatics on Migration Modelling.
 
 My research interests are: 
 
 +	Environmental risk assessment;
 +	Radon mapping;
-+ Radon measurements in air, soil, and water;
-+	Natural radioactivity, Natural Occurrence Radioactive Materials (NORM);
-+	Statistics, spatial data analysis, and geostatistics;
++ Statistics, spatial data analysis, and geostatistics;
 + Geographic information systems;
 + R language.
 
@@ -153,7 +151,9 @@ My research interests are:
   exp <- matrix(NA, length(exp_ORCID$`0000-0003-0624-2345`$`affiliation-group`$summaries), 7)
   for (i in seq_along(exp_ORCID$`0000-0003-0624-2345`$`affiliation-group`$summaries)) {
     exp[i, 1] <- exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.start-date.year.value`
-    exp[i, 2] <- exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.end-date.year.value`
+    exp[i, 2] <- if_else(is.null(exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.end-date.year.value`),
+                         "",
+                         exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.end-date.year.value`)
     exp[i, 3] <- exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.role-title`
     exp[i, 4] <- exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.organization.name`
     exp[i, 5] <- exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.department-name`
