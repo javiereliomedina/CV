@@ -4,7 +4,6 @@ date: "`r format(Sys.time(), '%B %Y')`"
 output:
   pdf_document:
     df_print: kable
-    latex_engine: xelatex
 subparagraph: yes
 header-includes:
   - \usepackage{colortbl}
@@ -194,7 +193,9 @@ My research interests are:
   exp <- matrix(NA, length(exp_ORCID$`0000-0003-0624-2345`$`affiliation-group`$summaries), 7)
   for (i in seq_along(exp_ORCID$`0000-0003-0624-2345`$`affiliation-group`$summaries)) {
     exp[i, 1] <- exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.start-date.year.value`
-    exp[i, 2] <- exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.end-date.year.value`
+    exp[i, 2] <- if_else(is.null(exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.end-date.year.value`),
+                         "",
+                         exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.end-date.year.value`)
     exp[i, 3] <- exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.role-title`
     exp[i, 4] <- exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.organization.name`
     exp[i, 5] <- exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.department-name`
