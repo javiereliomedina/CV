@@ -449,6 +449,7 @@ pubs %>%
   select(Year, Details) %>%
   arrange(desc(Year)) %>%
   CV_Table()
+
 ```
 
 \vspace{-0.5cm}
