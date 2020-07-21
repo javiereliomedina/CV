@@ -440,6 +440,7 @@ I have published **`r length(pubs$Type)`** peer-reviewed journal articles, chapt
 pubs %>%
   filter(Type == "journal-article") %>%
   mutate(Authors = str_replace_all(Authors, "Elío", "\\\\textbf{Elío}"),  # Bold my surname
+         Authors = str_replace_all(Authors, "Medina, J.E.", "\\\\textbf{Elío}, J."), # Correct surname
          Volume = str_replace_na(Volume),   
          Pages = str_replace_na(Pages), 
          DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", DOI, "}",  sep = ""),
@@ -456,16 +457,23 @@ pubs %>%
 ## Book chapters
 \vspace{-0.1cm}
 ```{r books, results = 'asis'}
-pubs %>%
+
+A <- tibble(Year = "2019",
+            Details = "European Commission, Joint Research Centre – Cinelli, G., De Cort, M., Tollefsen, T. (Eds.): European Atlas of Natural Radiation, Publication Office of the European Union, Luxembourg, 2019. ISBN 978-92-76-08259-0, Catalogue number KJ-02-19-425-EN-C, EUR 19425 EN. Printed by Bietlot in Belgium 2019 – 190 pp. – 30.1 cm— 42.4 cm, \\textcolor{blue}{http://dx.doi.org/10.2760/520053}.") # Add document manually 
+
+B <- pubs %>%
   filter(Type == "book") %>%
   mutate(Authors = str_replace_all(Authors, "Elío", "\\\\textbf{Elío}"),
-         Volume = str_replace_na(Volume),   # remove NA for collapsing later the strine
+         Volume = str_replace_na(Volume),   # remove NA for collapsing later the string
          Pages = str_replace_na(Pages), 
          DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", DOI, "}",  sep = ""),
          Details = str_c(Authors, Title, Journal, Volume, Pages, DOI, sep = ", "),
          Details = str_replace(Details, "NA,", ""),
          Details = str_c(Details, ". ")) %>%
-  select(Year, Details) %>%
+  select(Year, Details)  
+
+bind_rows(A, B) %>%
   arrange(desc(Year)) %>%
   CV_Table()
+
 ```
