@@ -29,8 +29,8 @@ library(kableExtra)
 library(rorcid)
 library(rcrossref)
   
-source("CV_Table.R")
-source("Escape_Latex_Specials.R")
+source("CV_table.R")
+source("Escape_latex_specials.R")
 ```
 
 ```{r ORCID_Works}
@@ -48,7 +48,18 @@ source("Escape_Latex_Specials.R")
   id <- "0000-0003-0624-2345"
   out <- works(orcid_id(id)) 
   wks <- orcid_works(id, out$`put-code`)
-  
+
+# Alternative names and bold my surname in the pdf
+  replace_my_name <- function(x) {
+    x <- str_replace_all(x, "Elio", "Elío")
+    x <- str_replace_all(x, "de Elío", "Elío")
+    x <- str_replace_all(x, "Medina, J.E.", "Elío, J.")
+    x <- str_replace_all(x, "Elío", "\\\\textbf{Elío}")
+    }
+
+# Bold text in the pdf
+  bold_text <- function(x) {x <- str_c("\\textbf{", x, "}")}
+
 # Extract publication information 
   Authors <- vector()
   for (i in seq_along(wks[[id]]$works$work.contributors.contributor)) {
@@ -69,8 +80,7 @@ source("Escape_Latex_Specials.R")
     distinct(DOI, .keep_all = TRUE) %>% 
     mutate(DOI = replace(DOI, DOI == "2-s2.0-84899952872", "10.30955/gnj.001242"), 
            DOI = replace(DOI, DOI == "2-s2.0-84899963838", "10.30955/gnj.001241"),
-           Authors = str_replace_all(Authors, "Elio", "Elío"),
-           Authors = str_replace_all(Authors, "de Elío", "Elío")) %>%
+           Authors = replace_my_name(Authors)) %>%
     filter(Type == "journal-article" | Type == "book")      
   
 # Add volume and pages 
@@ -81,12 +91,19 @@ source("Escape_Latex_Specials.R")
            Pages = str_match(VP, "pages = \\{(.*[0-9])")[,2]) 
 # Remove latex symbols for knit
   pubs <- pubs %>%
-    mutate(Authors = Escape_Latex_Specials(Authors),
-           Title   = Escape_Latex_Specials(Title),
-           Journal = Escape_Latex_Specials(Journal),
-           DOI     = Escape_Latex_Specials(DOI))
+    mutate(Authors = Escape_latex_specials(Authors),
+           Title   = Escape_latex_specials(Title),
+           Journal = Escape_latex_specials(Journal),
+           DOI     = Escape_latex_specials(DOI),
+           DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", DOI, "}",  sep = "")) # Link to the article
 ```
- 
+  
+```{r GS}
+
+  My_GS <- scholar::get_profile("NF5SYm8AAAAJ&hl")
+
+```
+
 \vspace{-0.1cm}
 \footnotesize 
 \rightline{\textcolor{darktext}{"Expert on environmental research, statistics, spatial data analysis, and modelling."}} 
@@ -95,163 +112,144 @@ source("Escape_Latex_Specials.R")
 # Education
 \vspace{-0.20cm}
 ```{r Education,  results = 'asis'}
+
  edu_ORCID <- orcid_educations(id)
   
-  edu <- matrix(NA, length(edu_ORCID[[id]]$`affiliation-group`$summaries), 6)
-  for (i in seq_along(edu_ORCID[[id]]$`affiliation-group`$summaries)) {
-   edu[i, 1] <- edu_ORCID[[id]][[2]]$summaries[[i]]$`education-summary.start-date.year.value`
-   edu[i, 2] <- edu_ORCID[[id]][[2]]$summaries[[i]]$`education-summary.end-date.year.value`
-   edu[i, 3] <- edu_ORCID[[id]][[2]]$summaries[[i]]$`education-summary.role-title`
-   edu[i, 4] <- edu_ORCID[[id]][[2]]$summaries[[i]]$`education-summary.organization.name`
-   edu[i, 5] <- edu_ORCID[[id]][[2]]$summaries[[i]]$`education-summary.organization.address.city`
-   edu[i, 6] <- edu_ORCID[[id]][[2]]$summaries[[i]]$`education-summary.organization.address.country`
-  }
+  df_edu <- dplyr::bind_rows(edu_ORCID[[id]]$`affiliation-group`$summaries) %>% 
+    select(`education-summary.start-date.year.value`,
+           `education-summary.end-date.year.value`,
+           `education-summary.role-title`,
+           `education-summary.organization.name`,
+           `education-summary.organization.address.city`,
+           `education-summary.organization.address.country`) %>% 
+    rename(Year_Start = `education-summary.start-date.year.value`,
+           Year_End   = `education-summary.end-date.year.value`,
+           Title      = `education-summary.role-title`,
+           Uni        = `education-summary.organization.name`,
+           City       = `education-summary.organization.address.city`,
+           Country    = `education-summary.organization.address.country`) 
   
-  edu <- as_tibble(edu) %>%
-    rename(Year_Start = V1,
-           Year_End = V2,
-           Title = V3,
-           Uni = V4,
-           City = V5,
-           Country = V6) 
-  
-  edu %>% 
+  df_edu %>% 
     mutate(Year_End = str_sub(Year_End, -2), 
-           Year = str_c(Year_Start, Year_End, sep = "-"),
-           Title = str_c("\\textbf{", Title, "}"), 
-           Details = str_c(Title, Uni, City, Country, sep = ", "),
-           Details = str_c(Details, ". ")) %>%
-    select(Year, Details) %>%
-    CV_Table()
+           Title = bold_text(Title)) %>%
+    unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
+    unite(Details, Title, Uni, City, Country, sep = ", ", na.rm = TRUE) %>% 
+    CV_table()
+  
 ```
+
 \vspace{-0.75cm}
 # Experience
 \vspace{-0.20cm}
 ```{r experience, results = 'asis'}
+  
   exp_ORCID <- orcid_employments(id)
   
-  exp <- matrix(NA, length(exp_ORCID$`0000-0003-0624-2345`$`affiliation-group`$summaries), 7)
-  for (i in seq_along(exp_ORCID$`0000-0003-0624-2345`$`affiliation-group`$summaries)) {
-    exp[i, 1] <- exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.start-date.year.value`
-    exp[i, 2] <- if_else(is.null(exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.end-date.year.value`),
-                         "",
-                         exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.end-date.year.value`)
-    exp[i, 3] <- exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.role-title`
-    exp[i, 4] <- exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.organization.name`
-    exp[i, 5] <- exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.department-name`
-    exp[i, 6] <- exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.organization.address.city`
-    exp[i, 7] <- exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.organization.address.country`
-  }
+  df_exp <- dplyr::bind_rows(exp_ORCID[[id]]$`affiliation-group`$summaries) %>% 
+    select(`employment-summary.start-date.year.value`,
+           `employment-summary.end-date.year.value`,
+           `employment-summary.role-title`,
+           `employment-summary.organization.name`,
+           `employment-summary.department-name`,
+           `employment-summary.organization.address.city`,
+           `employment-summary.organization.address.country`) %>% 
+    rename(Year_Start = `employment-summary.start-date.year.value`,
+           Year_End   = `employment-summary.end-date.year.value`,
+           Role       = `employment-summary.role-title`,
+           Company    = `employment-summary.organization.name`,
+           Depart     = `employment-summary.department-name`,
+           City       = `employment-summary.organization.address.city`,
+           Country    = `employment-summary.organization.address.country`) 
   
-  exp <- as_tibble(exp) %>%
-    rename(Year_Start = V1,
-           Year_End = V2,
-           Role = V3,
-           Company = V4,
-           Depart = V5,
-           City = V6, 
-           Country = V7) 
-  
-  exp %>% 
+  df_exp %>% 
     mutate(Year_End = str_sub(Year_End, -2), 
-           Year = str_c(Year_Start, Year_End, sep = "-"),
-           Role = str_c("\\textbf{", Role, "}"), 
-           Details = str_c(Role, Company, Depart, City, Country, sep = ", "),
-           Details = str_c(Details, ". ")) %>%
-    select(Year, Details) %>%
-    arrange(desc(Year)) %>%
-    CV_Table()
+           Role = bold_text(Role)) %>%
+    unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
+    unite(Details, Role, Company, Depart, City, Country, sep = ", ", na.rm = TRUE) %>% 
+    CV_table()
+  
 ```
 \vspace{-0.7cm}
 # Professional Services
 \vspace{-0.20cm}
 ```{r Services, results = 'asis'} 
-tribble(
-  ~Year, ~Institution, ~Role,
-  "2018/19", "\\textbf{International Atomic Energy Agency (IAEA)}", "Expert missions on Radon Mapping and National Radon Action Plans: Peru (August 2018), Cyprus (October 2018), Lithuania (July 2019)",
-  
-  "2018", "\\textbf{European Commission, Joint Research Centre (JRC)}", "Invite as an expert to the meeting -Working Group Meeting on Indoor Radon Dose- (May 2018, Ispra, Italy)"
+
+  tribble(
+    ~Year, ~Institution, ~Role,
+    "2018-19", "\\textbf{International Atomic Energy Agency (IAEA)}", "Expert missions on Radon Mapping and National Radon Action Plans: Peru (August 2018), Cyprus (October 2018), Lithuania (July 2019)",
+    
+    "2018", "\\textbf{European Commission, Joint Research Centre (JRC)}", "Invite as an expert to the meeting -Working Group Meeting on Indoor Radon Dose- (May 2018, Ispra, Italy)"
   ) %>% 
-  mutate(Details = str_c(Institution, Role, sep = ", ")) %>%
-  select(Year, Details) %>%
-  CV_Table()
+    mutate(Details = str_c(Institution, Role, sep = ", ")) %>%
+    select(Year, Details) %>%
+    CV_table()
+
 ```
+
 \vspace{-0.7cm}
 # Professional memberships
 \vspace{-0.20cm}
 ```{r memberships, results = 'asis'}
+   
   mem_ORCID <- orcid_memberships(id)
   
-  mem <- matrix(NA, length(mem_ORCID[[id]][[2]]$summaries), 7)
-  for (i in seq_along(mem_ORCID[[id]][[2]]$summaries)) {
-    mem[i, 1] <- mem_ORCID[[id]][[2]]$summaries[[i]]$`membership-summary.start-date.year.value`
-    mem[i, 2] <- mem_ORCID[[id]][[2]]$summaries[[i]]$`membership-summary.end-date`
-    mem[i, 3] <- mem_ORCID[[id]][[2]]$summaries[[i]]$`membership-summary.role-title`
-    mem[i, 4] <- mem_ORCID[[id]][[2]]$summaries[[i]]$`membership-summary.organization.name`
-    mem[i, 5] <- mem_ORCID[[id]][[2]]$summaries[[i]]$`membership-summary.department-name`
-    mem[i, 6] <- mem_ORCID[[id]][[2]]$summaries[[i]]$`membership-summary.organization.address.city`
-    mem[i, 7] <- mem_ORCID[[id]][[2]]$summaries[[i]]$`membership-summary.organization.address.country`
-    }
+  df_mem <- dplyr::bind_rows(mem_ORCID[[id]]$`affiliation-group`$summaries) %>% 
+    select(`membership-summary.start-date.year.value`,
+           `membership-summary.end-date`,
+           `membership-summary.role-title`,
+           `membership-summary.organization.name`,
+           `membership-summary.department-name`,
+           `membership-summary.organization.address.city`,
+           `membership-summary.organization.address.country`) %>% 
+    rename(Year_Start = `membership-summary.start-date.year.value`,
+           Year_End   = `membership-summary.end-date`,
+           Role       = `membership-summary.role-title`,
+           Company    = `membership-summary.organization.name`,
+           Depart     = `membership-summary.department-name`,
+           City       = `membership-summary.organization.address.city`,
+           Country    = `membership-summary.organization.address.country`) 
+
+  df_mem %>% 
+    mutate(Company = bold_text(Company)) %>%
+    unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
+    unite(Details, Company, Depart, City, Country, sep = ", ", na.rm = TRUE) %>% 
+    CV_table()
   
-  mem <- as_tibble(mem) %>%
-    rename(Year_Start = V1,
-           Year_End = V2,
-           Role = V3,
-           Company = V4,
-           Depart = V5,
-           City = V6, 
-           Country = V7) 
-  
-  mem %>% 
-    mutate(Year_End = str_replace_na(Year_End),
-           Depart = str_replace_na(Depart),
-           Year = str_c(Year_Start, Year_End, sep = "-"),
-           Year = str_replace(Year, "NA", ""),
-           Company = str_c("\\textbf{", Company, "}"), 
-           Details = str_c(Company, Depart, City, Country, sep = ", "),
-           Details = str_replace(Details, "NA,", ""),
-           Details = str_c(Details, ". ")) %>%
-    select(Year, Details) %>%
-    arrange(desc(Year)) %>%
-    CV_Table() 
 ```
 \vspace{-0.7cm}
 # Honours and Awards
 \vspace{-0.20cm}
 ```{r funding, results = 'asis'}
- fund_ORCID <- orcid_fundings(id)
+
+  fund_ORCID <- orcid_fundings(id)
   
-  fund <- matrix(NA, length(fund_ORCID[[id]][[2]]$`funding-summary`), 7)
-  for (i in seq_along(fund_ORCID[[id]][[2]]$`funding-summary`)) {
-    fund[i, 1] <- fund_ORCID[[id]][[2]]$`funding-summary`[[i]]$type
-    fund[i, 2] <- fund_ORCID[[id]][[2]]$`funding-summary`[[i]]$`start-date.year.value`
-    fund[i, 3] <- fund_ORCID[[id]][[2]]$`funding-summary`[[i]]$`end-date.year.value`
-    fund[i, 4] <- fund_ORCID[[id]][[2]]$`funding-summary`[[i]]$title.title.value
-    fund[i, 5] <- fund_ORCID[[id]][[2]]$`funding-summary`[[i]]$organization.name
-    fund[i, 6] <- fund_ORCID[[id]][[2]]$`funding-summary`[[i]]$organization.address.city
-    fund[i, 7] <- fund_ORCID[[id]][[2]]$`funding-summary`[[i]]$organization.address.country
-  }
+  df_fund <- dplyr::bind_rows(fund_ORCID[[id]][[2]]$`funding-summary`) %>% 
+    select(type,
+           `start-date.year.value`,
+           `end-date.year.value`,
+           title.title.value,
+           organization.name,
+           organization.address.city,
+           organization.address.country) %>% 
+    rename(Type = type,
+           Year_Start = `start-date.year.value`,
+           Year_End = `end-date.year.value`,
+           Title = title.title.value,
+           Company = organization.name,
+           City = organization.address.city, 
+           Country = organization.address.country)
   
-  fund <- as_tibble(fund) %>%
-    rename(Type = V1,
-           Year_Start = V2,
-           Year_End = V3,
-           Title = V4,
-           Company = V5,
-           City = V6, 
-           Country = V7)
 ```
+
 ```{r awards, results = 'asis'}
- fund %>% 
+
+  df_fund %>% 
     filter(Type == "award") %>%
-    mutate(Year = Year_Start,
-           Title = str_c("\\textbf{", Title, "}"), 
-           Details = str_c(Title, Company, City, Country, sep = ", "),
-           Details = str_replace(Details, "NA,", ""),
-           Details = str_c(Details, ". ")) %>%
-    select(Year, Details) %>%
-    arrange(desc(Year)) %>%
-    CV_Table()
+    mutate(Title = bold_text(Title)) %>%
+    rename(Year = Year_Start) %>%
+    unite(Details, Title, Company, City, Country, sep = ", ", na.rm = TRUE) %>% 
+    CV_table()
+
 ```
 \vspace{-0.75cm}
 # Other skills
