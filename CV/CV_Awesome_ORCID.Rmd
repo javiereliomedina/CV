@@ -116,10 +116,10 @@ I am an engineer from the Technical University of Madrid (Spain) with 10+ years 
 
 My research interests are: 
 
-+	Environmental risk assessment;
-+ Statistics, spatial data analysis, and geostatistics;
-+ Geographic information systems;
-+ R language.
++	Environmental risk assessment
++ Statistics, spatial data analysis, and geostatistics
++ Geographic information systems
++ R language
 
 # Education
 \vspace{-0.1cm}
