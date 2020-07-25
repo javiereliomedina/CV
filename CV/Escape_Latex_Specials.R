@@ -1,5 +1,5 @@
 # Remove latex symbols
-Escape_Latex_Specials <- function(x) {
+Escape_latex_specials <- function(x) {
   x <- gsub("{\\'{a}}"    , "á"    , x, fixed = T)
   x <- gsub("{\\'{e}}"    , "é"    , x, fixed = T)
   x <- gsub("{\\'{i}}"    , "í"    , x, fixed = T)
