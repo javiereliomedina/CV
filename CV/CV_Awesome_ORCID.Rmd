@@ -125,27 +125,23 @@ My research interests are:
 \vspace{-0.1cm}
 ```{r Education,  results = 'asis'}
 
- edu_ORCID <- orcid_educations(id)
+  edu_ORCID <- orcid_educations(id)
   
-  edu <- matrix(NA, length(edu_ORCID[[id]]$`affiliation-group`$summaries), 6)
-  for (i in seq_along(edu_ORCID[[id]]$`affiliation-group`$summaries)) {
-   edu[i, 1] <- edu_ORCID[[id]][[2]]$summaries[[i]]$`education-summary.start-date.year.value`
-   edu[i, 2] <- edu_ORCID[[id]][[2]]$summaries[[i]]$`education-summary.end-date.year.value`
-   edu[i, 3] <- edu_ORCID[[id]][[2]]$summaries[[i]]$`education-summary.role-title`
-   edu[i, 4] <- edu_ORCID[[id]][[2]]$summaries[[i]]$`education-summary.organization.name`
-   edu[i, 5] <- edu_ORCID[[id]][[2]]$summaries[[i]]$`education-summary.organization.address.city`
-   edu[i, 6] <- edu_ORCID[[id]][[2]]$summaries[[i]]$`education-summary.organization.address.country`
-  }
+  df_edu <- dplyr::bind_rows(edu_ORCID[[id]]$`affiliation-group`$summaries) %>% 
+    select(`education-summary.start-date.year.value`,
+           `education-summary.end-date.year.value`,
+           `education-summary.role-title`,
+           `education-summary.organization.name`,
+           `education-summary.organization.address.city`,
+           `education-summary.organization.address.country`) %>% 
+    rename(Year_Start = `education-summary.start-date.year.value`,
+           Year_End   = `education-summary.end-date.year.value`,
+           Title      = `education-summary.role-title`,
+           Uni        = `education-summary.organization.name`,
+           City       = `education-summary.organization.address.city`,
+           Country    = `education-summary.organization.address.country`) 
   
-  edu <- as_tibble(edu) %>%
-    rename(Year_Start = V1,
-           Year_End = V2,
-           Title = V3,
-           Uni = V4,
-           City = V5,
-           Country = V6) 
-  
-  edu %>% 
+  df_edu %>% 
     mutate(Year_End = str_sub(Year_End, -2), 
            Title = bold_text(Title)) %>%
     unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
@@ -161,29 +157,23 @@ My research interests are:
 
   exp_ORCID <- orcid_employments(id)
   
-  exp <- matrix(NA, length(exp_ORCID$`0000-0003-0624-2345`$`affiliation-group`$summaries), 7)
-  for (i in seq_along(exp_ORCID$`0000-0003-0624-2345`$`affiliation-group`$summaries)) {
-    exp[i, 1] <- exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.start-date.year.value`
-    exp[i, 2] <- if_else(is.null(exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.end-date.year.value`),
-                         "",
-                         exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.end-date.year.value`)
-    exp[i, 3] <- exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.role-title`
-    exp[i, 4] <- exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.organization.name`
-    exp[i, 5] <- exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.department-name`
-    exp[i, 6] <- exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.organization.address.city`
-    exp[i, 7] <- exp_ORCID[[id]][[2]]$summaries[[i]]$`employment-summary.organization.address.country`
-  }
+  df_exp <- dplyr::bind_rows(exp_ORCID[[id]]$`affiliation-group`$summaries) %>% 
+    select(`employment-summary.start-date.year.value`,
+           `employment-summary.end-date.year.value`,
+           `employment-summary.role-title`,
+           `employment-summary.organization.name`,
+           `employment-summary.department-name`,
+           `employment-summary.organization.address.city`,
+           `employment-summary.organization.address.country`) %>% 
+    rename(Year_Start = `employment-summary.start-date.year.value`,
+           Year_End   = `employment-summary.end-date.year.value`,
+           Role       = `employment-summary.role-title`,
+           Company    = `employment-summary.organization.name`,
+           Depart     = `employment-summary.department-name`,
+           City       = `employment-summary.organization.address.city`,
+           Country    = `employment-summary.organization.address.country`) 
   
-  exp <- as_tibble(exp) %>%
-    rename(Year_Start = V1,
-           Year_End = V2,
-           Role = V3,
-           Company = V4,
-           Depart = V5,
-           City = V6, 
-           Country = V7) 
-  
-  exp %>% 
+  df_exp %>% 
     mutate(Year_End = str_sub(Year_End, -2), 
            Role = bold_text(Role)) %>%
     unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
@@ -199,33 +189,27 @@ My research interests are:
 
   inv_ORCID <- orcid_invited_positions(id)
   
-  inv <- matrix(NA, length(inv_ORCID[[id]][[2]]$summaries), 7)
-  for (i in seq_along(inv_ORCID[[id]][[2]]$summaries)) {
-    inv[i, 1] <- inv_ORCID[[id]][[2]]$summaries[[i]]$`invited-position-summary.start-date.year.value`
-    inv[i, 2] <- if_else(is.null(inv_ORCID[[id]][[2]]$summaries[[i]]$`invited-position-summary.end-date.year.value`),
-                         "",
-                         inv_ORCID[[id]][[2]]$summaries[[i]]$`invited-position-summary.end-date.year.value`)
-    inv[i, 3] <- inv_ORCID[[id]][[2]]$summaries[[i]]$`invited-position-summary.role-title`
-    inv[i, 4] <- inv_ORCID[[id]][[2]]$summaries[[i]]$`invited-position-summary.organization.name`
-    inv[i, 5] <- inv_ORCID[[id]][[2]]$summaries[[i]]$`invited-position-summary.department-name`
-    inv[i, 6] <- inv_ORCID[[id]][[2]]$summaries[[i]]$`invited-position-summary.organization.address.city`
-    inv[i, 7] <- inv_ORCID[[id]][[2]]$summaries[[i]]$`invited-position-summary.organization.address.country`
-  }
+  df_inv <- dplyr::bind_rows(inv_ORCID[[id]]$`affiliation-group`$summaries) %>% 
+    select(`invited-position-summary.start-date.year.value`,
+           `invited-position-summary.end-date.year.value`,
+           `invited-position-summary.role-title`,
+           `invited-position-summary.organization.name`,
+           `invited-position-summary.department-name`,
+           `invited-position-summary.organization.address.city`,
+           `invited-position-summary.organization.address.country`) %>% 
+    rename(Year_Start = `invited-position-summary.start-date.year.value`,
+           Year_End   = `invited-position-summary.end-date.year.value`,
+           Role       = `invited-position-summary.role-title`,
+           Company    = `invited-position-summary.organization.name`,
+           Depart     = `invited-position-summary.department-name`,
+           City       = `invited-position-summary.organization.address.city`,
+           Country    = `invited-position-summary.organization.address.country`) 
   
-  inv <- as_tibble(inv) %>%
-    rename(Year_Start = V1,
-           Year_End = V2,
-           Role = V3,
-           Company = V4,
-           Department = V5,
-           City = V6, 
-           Country = V7) 
-  
-  inv %>% 
+  df_inv %>% 
     mutate(Year_End = str_sub(Year_End, -2), 
            Role = bold_text(Role)) %>%
     unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
-    unite(Details, Role, Company, Department, City, Country, sep = ", ", na.rm = TRUE) %>% 
+    unite(Details, Role, Company, Depart, City, Country, sep = ", ", na.rm = TRUE) %>% 
     CV_table()
   
 ```
@@ -237,27 +221,23 @@ My research interests are:
 
   mem_ORCID <- orcid_memberships(id)
   
-  mem <- matrix(NA, length(mem_ORCID[[id]][[2]]$summaries), 7)
-  for (i in seq_along(mem_ORCID[[id]][[2]]$summaries)) {
-    mem[i, 1] <- mem_ORCID[[id]][[2]]$summaries[[i]]$`membership-summary.start-date.year.value`
-    mem[i, 2] <- mem_ORCID[[id]][[2]]$summaries[[i]]$`membership-summary.end-date`
-    mem[i, 3] <- mem_ORCID[[id]][[2]]$summaries[[i]]$`membership-summary.role-title`
-    mem[i, 4] <- mem_ORCID[[id]][[2]]$summaries[[i]]$`membership-summary.organization.name`
-    mem[i, 5] <- mem_ORCID[[id]][[2]]$summaries[[i]]$`membership-summary.department-name`
-    mem[i, 6] <- mem_ORCID[[id]][[2]]$summaries[[i]]$`membership-summary.organization.address.city`
-    mem[i, 7] <- mem_ORCID[[id]][[2]]$summaries[[i]]$`membership-summary.organization.address.country`
-    }
-  
-  mem <- as_tibble(mem) %>%
-    rename(Year_Start = V1,
-           Year_End = V2,
-           Role = V3,
-           Company = V4,
-           Depart = V5,
-           City = V6, 
-           Country = V7) 
-  
-  mem %>% 
+  df_mem <- dplyr::bind_rows(mem_ORCID[[id]]$`affiliation-group`$summaries) %>% 
+    select(`membership-summary.start-date.year.value`,
+           `membership-summary.end-date`,
+           `membership-summary.role-title`,
+           `membership-summary.organization.name`,
+           `membership-summary.department-name`,
+           `membership-summary.organization.address.city`,
+           `membership-summary.organization.address.country`) %>% 
+    rename(Year_Start = `membership-summary.start-date.year.value`,
+           Year_End   = `membership-summary.end-date`,
+           Role       = `membership-summary.role-title`,
+           Company    = `membership-summary.organization.name`,
+           Depart     = `membership-summary.department-name`,
+           City       = `membership-summary.organization.address.city`,
+           Country    = `membership-summary.organization.address.country`) 
+
+  df_mem %>% 
     mutate(Company = bold_text(Company)) %>%
     unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
     unite(Details, Company, Depart, City, Country, sep = ", ", na.rm = TRUE) %>% 
@@ -272,27 +252,23 @@ My research interests are:
 
   ser_ORCID <- orcid_services(id)
   
-  ser <- matrix(NA, length(ser_ORCID[[id]][[2]]$summaries), 7)
-  for (i in seq_along(ser_ORCID[[id]][[2]]$summaries)) {
-    ser[i, 1] <- ser_ORCID[[id]][[2]]$summaries[[i]]$`service-summary.start-date.year.value`
-    ser[i, 2] <- ser_ORCID[[id]][[2]]$summaries[[i]]$`service-summary.end-date.year.value`
-    ser[i, 3] <- ser_ORCID[[id]][[2]]$summaries[[i]]$`service-summary.role-title`
-    ser[i, 4] <- ser_ORCID[[id]][[2]]$summaries[[i]]$`service-summary.organization.name`
-    ser[i, 5] <- ser_ORCID[[id]][[2]]$summaries[[i]]$`service-summary.department-name`
-    ser[i, 6] <- ser_ORCID[[id]][[2]]$summaries[[i]]$`service-summary.organization.address.city`
-    ser[i, 7] <- ser_ORCID[[id]][[2]]$summaries[[i]]$`service-summary.organization.address.country`
-  }
+  df_ser <- dplyr::bind_rows(ser_ORCID[[id]]$`affiliation-group`$summaries) %>% 
+    select(`service-summary.start-date.year.value`,
+           `service-summary.end-date.year.value`,
+           `service-summary.role-title`,
+           `service-summary.organization.name`,
+           `service-summary.department-name`,
+           `service-summary.organization.address.city`,
+           `service-summary.organization.address.country`) %>% 
+    rename(Year_Start = `service-summary.start-date.year.value`,
+           Year_End   = `service-summary.end-date.year.value`,
+           Role       = `service-summary.role-title`,
+           Company    = `service-summary.organization.name`,
+           Depart     = `service-summary.department-name`,
+           City       = `service-summary.organization.address.city`,
+           Country    = `service-summary.organization.address.country`)
   
-  ser <- as_tibble(ser) %>%
-    rename(Year_Start = V1,
-           Year_End = V2,
-           Role = V3,
-           Company = V4,
-           Depart = V5,
-           City = V6, 
-           Country = V7) 
-  
-  ser %>% 
+  df_ser %>% 
     mutate(Year_End = str_sub(Year_End, -2), 
            Company = bold_text(Company)) %>%
     unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
@@ -306,33 +282,29 @@ My research interests are:
 \vspace{-0.1cm}
 ```{r funding, results = 'asis'}
 
- fund_ORCID <- orcid_fundings(id)
+  fund_ORCID <- orcid_fundings(id)
   
-  fund <- matrix(NA, length(fund_ORCID[[id]][[2]]$`funding-summary`), 7)
-  for (i in seq_along(fund_ORCID[[id]][[2]]$`funding-summary`)) {
-    fund[i, 1] <- fund_ORCID[[id]][[2]]$`funding-summary`[[i]]$type
-    fund[i, 2] <- fund_ORCID[[id]][[2]]$`funding-summary`[[i]]$`start-date.year.value`
-    fund[i, 3] <- fund_ORCID[[id]][[2]]$`funding-summary`[[i]]$`end-date.year.value`
-    fund[i, 4] <- fund_ORCID[[id]][[2]]$`funding-summary`[[i]]$title.title.value
-    fund[i, 5] <- fund_ORCID[[id]][[2]]$`funding-summary`[[i]]$organization.name
-    fund[i, 6] <- fund_ORCID[[id]][[2]]$`funding-summary`[[i]]$organization.address.city
-    fund[i, 7] <- fund_ORCID[[id]][[2]]$`funding-summary`[[i]]$organization.address.country
-  }
-  
-  fund <- as_tibble(fund) %>%
-    rename(Type = V1,
-           Year_Start = V2,
-           Year_End = V3,
-           Title = V4,
-           Company = V5,
-           City = V6, 
-           Country = V7)
-  
+  df_fund <- dplyr::bind_rows(fund_ORCID[[id]][[2]]$`funding-summary`) %>% 
+    select(type,
+           `start-date.year.value`,
+           `end-date.year.value`,
+           title.title.value,
+           organization.name,
+           organization.address.city,
+           organization.address.country) %>% 
+    rename(Type = type,
+           Year_Start = `start-date.year.value`,
+           Year_End = `end-date.year.value`,
+           Title = title.title.value,
+           Company = organization.name,
+           City = organization.address.city, 
+           Country = organization.address.country)
+
 ```
 
 ```{r Projects, results = 'asis'}
 
-  fund %>% 
+  df_fund %>% 
     filter(Type == "grant") %>%
     mutate(Year_End = str_sub(Year_End, -2), 
            Title = bold_text(Title)) %>%
@@ -347,7 +319,7 @@ My research interests are:
 \vspace{-0.1cm}
 ```{r awards, results = 'asis'}
 
-  fund %>% 
+  df_fund %>% 
     filter(Type == "award") %>%
     mutate(Title = bold_text(Title)) %>%
     rename(Year = Year_Start) %>%
