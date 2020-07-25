@@ -48,6 +48,13 @@ source("Escape_Latex_Specials.R")
   id <- "0000-0003-0624-2345"
   out <- works(orcid_id(id)) 
   wks <- orcid_works(id, out$`put-code`)
+
+# Alternative names
+  replace_my_name <- function(x) {
+    x <- str_replace_all(x, "Elio", "Elío")
+    x <- str_replace_all(x, "de Elío", "Elío")
+    x <- str_replace_all(x, "Medina, J.E.", "Elío, J.")
+  }
   
 # Extract publication information 
   Authors <- vector()
@@ -69,8 +76,7 @@ source("Escape_Latex_Specials.R")
     distinct(DOI, .keep_all = TRUE) %>% 
     mutate(DOI = replace(DOI, DOI == "2-s2.0-84899952872", "10.30955/gnj.001242"), 
            DOI = replace(DOI, DOI == "2-s2.0-84899963838", "10.30955/gnj.001241"),
-           Authors = str_replace_all(Authors, "Elio", "Elío"),
-           Authors = str_replace_all(Authors, "de Elío", "Elío")) %>%
+           Authors = replace_my_name(Authors)) %>%
     filter(Type == "journal-article" | Type == "book")      
   
 # Add volume and pages 
@@ -440,7 +446,6 @@ I have published **`r length(pubs$Type)`** peer-reviewed journal articles, chapt
 pubs %>%
   filter(Type == "journal-article") %>%
   mutate(Authors = str_replace_all(Authors, "Elío", "\\\\textbf{Elío}"),  # Bold my surname
-         Authors = str_replace_all(Authors, "Medina, J.E.", "\\\\textbf{Elío}, J."), # Correct surname
          Volume = str_replace_na(Volume),   
          Pages = str_replace_na(Pages), 
          DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", DOI, "}",  sep = ""),
