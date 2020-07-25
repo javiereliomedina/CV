@@ -91,7 +91,8 @@ source("Escape_latex_specials.R")
     mutate(Authors = Escape_latex_specials(Authors),
            Title   = Escape_latex_specials(Title),
            Journal = Escape_latex_specials(Journal),
-           DOI     = Escape_latex_specials(DOI))
+           DOI     = Escape_latex_specials(DOI),
+           DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", DOI, "}",  sep = "")) # Link to the article
 ```
   
 ```{r GS}
@@ -432,7 +433,6 @@ I have published **`r length(pubs$Type)`** peer-reviewed journal articles, chapt
 
   pubs %>%
     filter(Type == "journal-article") %>%
-    mutate(DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", DOI, "}",  sep = "")) %>%
     unite(Details, Authors, Title, Journal, Volume, Pages, DOI, sep = ", ", na.rm = TRUE) %>% 
     CV_table()
 
@@ -448,7 +448,6 @@ I have published **`r length(pubs$Type)`** peer-reviewed journal articles, chapt
   
   B <- pubs %>%
     filter(Type == "book") %>%
-    mutate(DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", DOI, "}",  sep = "")) %>%
     unite(Details, Authors, Title, Journal, Volume, Pages, DOI, sep = ", ", na.rm = TRUE) %>% 
     select(Year, Details)  
   
