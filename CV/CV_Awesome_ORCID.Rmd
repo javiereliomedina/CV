@@ -56,7 +56,10 @@ source("Escape_latex_specials.R")
     x <- str_replace_all(x, "Medina, J.E.", "Elío, J.")
     x <- str_replace_all(x, "Elío", "\\\\textbf{Elío}")
     }
-  
+
+# Bold text in the pdf
+  bold_text <- function(x) {x <- str_c("\\textbf{", x, "}")}
+
 # Extract publication information 
   Authors <- vector()
   for (i in seq_along(wks[[id]]$works$work.contributors.contributor)) {
@@ -144,7 +147,7 @@ My research interests are:
   
   edu %>% 
     mutate(Year_End = str_sub(Year_End, -2), 
-           Title = str_c("\\textbf{", Title, "}")) %>%
+           Title = bold_text(Title)) %>%
     unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
     unite(Details, Title, Uni, City, Country, sep = ", ", na.rm = TRUE) %>% 
     CV_table()
@@ -182,7 +185,7 @@ My research interests are:
   
   exp %>% 
     mutate(Year_End = str_sub(Year_End, -2), 
-           Role = str_c("\\textbf{", Role, "}")) %>%
+           Role = bold_text(Role)) %>%
     unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
     unite(Details, Role, Company, Depart, City, Country, sep = ", ", na.rm = TRUE) %>% 
     CV_table()
@@ -220,7 +223,7 @@ My research interests are:
   
   inv %>% 
     mutate(Year_End = str_sub(Year_End, -2), 
-           Role = str_c("\\textbf{", Role, "}")) %>%
+           Role = bold_text(Role)) %>%
     unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
     unite(Details, Role, Company, Department, City, Country, sep = ", ", na.rm = TRUE) %>% 
     CV_table()
@@ -255,7 +258,7 @@ My research interests are:
            Country = V7) 
   
   mem %>% 
-    mutate(Company = str_c("\\textbf{", Company, "}")) %>%
+    mutate(Company = bold_text(Company)) %>%
     unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
     unite(Details, Company, Depart, City, Country, sep = ", ", na.rm = TRUE) %>% 
     CV_table() 
@@ -291,7 +294,7 @@ My research interests are:
   
   ser %>% 
     mutate(Year_End = str_sub(Year_End, -2), 
-           Company = str_c("\\textbf{", Company, "}")) %>%
+           Company = bold_text(Company)) %>%
     unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
     unite(Details, Company, Depart, City, Country, sep = ", ", na.rm = TRUE) %>% 
     CV_table()
@@ -332,7 +335,7 @@ My research interests are:
   fund %>% 
     filter(Type == "grant") %>%
     mutate(Year_End = str_sub(Year_End, -2), 
-           Title = str_c("\\textbf{", Title, "}")) %>%
+           Title = bold_text(Title)) %>%
     unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>%
     unite(Details, Title, Company, City, Country, sep = ", ", na.rm = TRUE) %>% 
   CV_table()
@@ -346,7 +349,7 @@ My research interests are:
 
   fund %>% 
     filter(Type == "award") %>%
-    mutate(Title = str_c("\\textbf{", Title, "}")) %>%
+    mutate(Title = bold_text(Title)) %>%
     rename(Year = Year_Start) %>%
     unite(Details, Title, Company, City, Country, sep = ", ", na.rm = TRUE) %>% 
     CV_table()
@@ -384,7 +387,7 @@ teching <- tribble(~Year, ~Role, ~City, ~Country, ~Description, ~Uni, ~Type,
 
   teching %>% 
     filter(Type == "PhD Examiner") %>%
-    mutate(Role = str_c("\\textbf{", Role, "}")) %>%
+    mutate(Role = bold_text(Role)) %>%
     unite(Details, Role, Description, Uni, City, Country, sep = ", ") %>% 
   CV_table()
   
@@ -397,7 +400,7 @@ teching <- tribble(~Year, ~Role, ~City, ~Country, ~Description, ~Uni, ~Type,
 
   teching %>% 
     filter(Type == "Supervision") %>%
-    mutate(Role = str_c("\\textbf{", Role, "}")) %>%
+    mutate(Role = bold_text(Role)) %>%
     unite(Details, Role, Description, Uni, City, Country, sep = ", ") %>% 
   CV_table()
 
@@ -410,7 +413,7 @@ teching <- tribble(~Year, ~Role, ~City, ~Country, ~Description, ~Uni, ~Type,
 
   teching %>% 
     filter(Type == "Lectures") %>%
-      mutate(Role = str_c("\\textbf{", Role, "}")) %>%
+      mutate(Role = bold_text(Role)) %>%
       unite(Details, Role, Description, Uni, City, Country, sep = ", ") %>% 
     CV_table()
   
