@@ -49,12 +49,13 @@ source("Escape_latex_specials.R")
   out <- works(orcid_id(id)) 
   wks <- orcid_works(id, out$`put-code`)
 
-# Alternative names
+# Alternative names and bold my surname in the pdf
   replace_my_name <- function(x) {
     x <- str_replace_all(x, "Elio", "Elío")
     x <- str_replace_all(x, "de Elío", "Elío")
     x <- str_replace_all(x, "Medina, J.E.", "Elío, J.")
-  }
+    x <- str_replace_all(x, "Elío", "\\\\textbf{Elío}")
+    }
   
 # Extract publication information 
   Authors <- vector()
@@ -197,7 +198,9 @@ My research interests are:
   inv <- matrix(NA, length(inv_ORCID[[id]][[2]]$summaries), 7)
   for (i in seq_along(inv_ORCID[[id]][[2]]$summaries)) {
     inv[i, 1] <- inv_ORCID[[id]][[2]]$summaries[[i]]$`invited-position-summary.start-date.year.value`
-    inv[i, 2] <- inv_ORCID[[id]][[2]]$summaries[[i]]$`invited-position-summary.end-date.year.value`
+    inv[i, 2] <- if_else(is.null(inv_ORCID[[id]][[2]]$summaries[[i]]$`invited-position-summary.end-date.year.value`),
+                         "",
+                         inv_ORCID[[id]][[2]]$summaries[[i]]$`invited-position-summary.end-date.year.value`)
     inv[i, 3] <- inv_ORCID[[id]][[2]]$summaries[[i]]$`invited-position-summary.role-title`
     inv[i, 4] <- inv_ORCID[[id]][[2]]$summaries[[i]]$`invited-position-summary.organization.name`
     inv[i, 5] <- inv_ORCID[[id]][[2]]$summaries[[i]]$`invited-position-summary.department-name`
@@ -429,8 +432,7 @@ I have published **`r length(pubs$Type)`** peer-reviewed journal articles, chapt
 
   pubs %>%
     filter(Type == "journal-article") %>%
-    mutate(Authors = str_replace_all(Authors, "Elío", "\\\\textbf{Elío}"),  # Bold my surname
-           DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", DOI, "}",  sep = "")) %>%
+    mutate(DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", DOI, "}",  sep = "")) %>%
     unite(Details, Authors, Title, Journal, Volume, Pages, DOI, sep = ", ", na.rm = TRUE) %>% 
     CV_table()
 
@@ -446,8 +448,7 @@ I have published **`r length(pubs$Type)`** peer-reviewed journal articles, chapt
   
   B <- pubs %>%
     filter(Type == "book") %>%
-    mutate(Authors = str_replace_all(Authors, "Elío", "\\\\textbf{Elío}"),
-           DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", DOI, "}",  sep = "")) %>%
+    mutate(DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", DOI, "}",  sep = "")) %>%
     unite(Details, Authors, Title, Journal, Volume, Pages, DOI, sep = ", ", na.rm = TRUE) %>% 
     select(Year, Details)  
   
