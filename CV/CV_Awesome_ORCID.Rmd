@@ -94,7 +94,9 @@ source("Escape_latex_specials.R")
 ```
   
 ```{r GS}
-My_GS <- scholar::get_profile("NF5SYm8AAAAJ&hl")
+
+  My_GS <- scholar::get_profile("NF5SYm8AAAAJ&hl")
+
 ```
 
 \vspace{-0.1cm}
@@ -117,6 +119,7 @@ My research interests are:
 # Education
 \vspace{-0.1cm}
 ```{r Education,  results = 'asis'}
+
  edu_ORCID <- orcid_educations(id)
   
   edu <- matrix(NA, length(edu_ORCID[[id]]$`affiliation-group`$summaries), 6)
@@ -139,17 +142,18 @@ My research interests are:
   
   edu %>% 
     mutate(Year_End = str_sub(Year_End, -2), 
-           Year = str_c(Year_Start, Year_End, sep = "-"),
-           Title = str_c("\\textbf{", Title, "}"), 
-           Details = str_c(Title, Uni, City, Country, sep = ", "),
-           Details = str_c(Details, ". ")) %>%
+           Title = str_c("\\textbf{", Title, "}")) %>%
+    unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
+    unite(Details, Title, Uni, City, Country, sep = ", ", na.rm = TRUE) %>% 
     CV_table()
+  
 ```
 
 \vspace{-0.5cm}
 # Experience
 \vspace{-0.1cm}
 ```{r experience, results = 'asis'}
+
   exp_ORCID <- orcid_employments(id)
   
   exp <- matrix(NA, length(exp_ORCID$`0000-0003-0624-2345`$`affiliation-group`$summaries), 7)
@@ -176,17 +180,18 @@ My research interests are:
   
   exp %>% 
     mutate(Year_End = str_sub(Year_End, -2), 
-           Year = str_c(Year_Start, Year_End, sep = "-"),
-           Role = str_c("\\textbf{", Role, "}"), 
-           Details = str_c(Role, Company, Depart, City, Country, sep = ", "),
-           Details = str_c(Details, ". ")) %>%
+           Role = str_c("\\textbf{", Role, "}")) %>%
+    unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
+    unite(Details, Role, Company, Depart, City, Country, sep = ", ", na.rm = TRUE) %>% 
     CV_table()
+  
 ```
 
 \vspace{-0.5cm}
 # Invited Positions
 \vspace{-0.1cm}
 ```{r inv_positions, results = 'asis'} 
+
   inv_ORCID <- orcid_invited_positions(id)
   
   inv <- matrix(NA, length(inv_ORCID[[id]][[2]]$summaries), 7)
@@ -211,17 +216,18 @@ My research interests are:
   
   inv %>% 
     mutate(Year_End = str_sub(Year_End, -2), 
-           Year = str_c(Year_Start, Year_End, sep = "-"),
-           Role = str_c("\\textbf{", Role, "}"), 
-           Details = str_c(Role, Company, Department, City, Country, sep = ", "),
-           Details = str_c(Details, ". ")) %>%
+           Role = str_c("\\textbf{", Role, "}")) %>%
+    unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
+    unite(Details, Role, Company, Department, City, Country, sep = ", ", na.rm = TRUE) %>% 
     CV_table()
+  
 ```
 
 \vspace{-0.5cm}
 # Professional memberships
 \vspace{-0.1cm}
 ```{r memberships, results = 'asis'}
+
   mem_ORCID <- orcid_memberships(id)
   
   mem <- matrix(NA, length(mem_ORCID[[id]][[2]]$summaries), 7)
@@ -245,21 +251,18 @@ My research interests are:
            Country = V7) 
   
   mem %>% 
-    mutate(Year_End = str_replace_na(Year_End),
-           Depart = str_replace_na(Depart),
-           Year = str_c(Year_Start, Year_End, sep = "-"),
-           Year = str_replace(Year, "NA", ""),
-           Company = str_c("\\textbf{", Company, "}"), 
-           Details = str_c(Company, Depart, City, Country, sep = ", "),
-           Details = str_replace(Details, "NA,", ""),
-           Details = str_c(Details, ". ")) %>%
+    mutate(Company = str_c("\\textbf{", Company, "}")) %>%
+    unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
+    unite(Details, Company, Depart, City, Country, sep = ", ", na.rm = TRUE) %>% 
     CV_table() 
+  
 ```
 
 \vspace{-0.5cm}
 # Professional Services
 \vspace{-0.1cm}
 ```{r Services, results = 'asis'} 
+
   ser_ORCID <- orcid_services(id)
   
   ser <- matrix(NA, length(ser_ORCID[[id]][[2]]$summaries), 7)
@@ -283,15 +286,10 @@ My research interests are:
            Country = V7) 
   
   ser %>% 
-    mutate(Year_End = str_replace_na(Year_End),
-           Depart = str_replace_na(Depart),
-           Year_End = str_sub(Year_End, -2), 
-           Year = str_c(Year_Start, Year_End, sep = "-"),
-           Year = str_replace(Year, "NA", ""),
-           Company = str_c("\\textbf{", Company, "}"), 
-           Details = str_c(Company, Depart, City, Country, sep = ", "),
-           Details = str_replace(Details, "NA,", ""),
-           Details = str_c(Details, ". ")) %>%
+    mutate(Year_End = str_sub(Year_End, -2), 
+           Company = str_c("\\textbf{", Company, "}")) %>%
+    unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
+    unite(Details, Company, Depart, City, Country, sep = ", ", na.rm = TRUE) %>% 
     CV_table()
   
 ```
@@ -300,6 +298,7 @@ My research interests are:
 # Funding projects
 \vspace{-0.1cm}
 ```{r funding, results = 'asis'}
+
  fund_ORCID <- orcid_fundings(id)
   
   fund <- matrix(NA, length(fund_ORCID[[id]][[2]]$`funding-summary`), 7)
@@ -321,41 +320,40 @@ My research interests are:
            Company = V5,
            City = V6, 
            Country = V7)
+  
 ```
 
 ```{r Projects, results = 'asis'}
+
   fund %>% 
     filter(Type == "grant") %>%
-    mutate(Year_End = str_replace_na(Year_End),
-           Year_End = str_sub(Year_End, -2), 
-           Year = str_c(Year_Start, Year_End, sep = "-"),
-           Year = str_replace(Year, "NA", ""),
-           Title = str_c("\\textbf{", Title, "}"), 
-           Details = str_c(Title, Company, City, Country, sep = ", "),
-           Details = str_replace(Details, "NA,", ""),
-           Details = str_c(Details, ". ")) %>%
-    CV_table()
+    mutate(Year_End = str_sub(Year_End, -2), 
+           Title = str_c("\\textbf{", Title, "}")) %>%
+    unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>%
+    unite(Details, Title, Company, City, Country, sep = ", ", na.rm = TRUE) %>% 
+  CV_table()
+
 ``` 
 \vspace{-0.5cm}
 
 # Honours and Awards
 \vspace{-0.1cm}
 ```{r awards, results = 'asis'}
- fund %>% 
+
+  fund %>% 
     filter(Type == "award") %>%
-    mutate(Year = Year_Start,
-           Title = str_c("\\textbf{", Title, "}"), 
-           Details = str_c(Title, Company, City, Country, sep = ", "),
-           Details = str_replace(Details, "NA,", ""),
-           Details = str_c(Details, ". ")) %>%
+    mutate(Title = str_c("\\textbf{", Title, "}")) %>%
+    rename(Year = Year_Start) %>%
+    unite(Details, Title, Company, City, Country, sep = ", ", na.rm = TRUE) %>% 
     CV_table()
+
 ```
 \vspace{-0.5cm}
 # Teaching Experience
 \vspace{-0.1cm}
 ```{r teaching, results = 'asis'}
 
-teching <- tribble(~Year, ~Role, ~City, ~Country, ~Details, ~Uni, ~Type,
+teching <- tribble(~Year, ~Role, ~City, ~Country, ~Description, ~Uni, ~Type,
 2017,	"External PhD examiner",	"Madrid", "ES",	"Thesis: “Integration of remote sensing and statistical techniques for detecting CO2 leaks in geological storage areas through the study of natural analogues, Miguel A. Rincones Salinas", "Technical University of Madrid",	"PhD Examiner",
 
 2017,	"Co-supervisor of a Master thesis in Environmental Sciences",	"Dublin", "IE",	"Assessing the contribution of Quaternary deposits to the soil radon budget in Ireland", "Trinity College Dublin, School of Natural Sciences, Geology", "Supervision",
@@ -379,36 +377,39 @@ teching <- tribble(~Year, ~Role, ~City, ~Country, ~Details, ~Uni, ~Type,
 ## PhD Examiner
 \vspace{-0.1cm}
 ```{r PhD Examiner, results = 'asis'}
-teching %>% 
-  filter(Type == "PhD Examiner") %>%
-  mutate(Role = str_c("\\textbf{", Role, "}"),
-         Details = str_c(Role, Details, Uni, City, Country, sep = ", "),
-         Details = str_c(Details, ". ")) %>%
+
+  teching %>% 
+    filter(Type == "PhD Examiner") %>%
+    mutate(Role = str_c("\\textbf{", Role, "}")) %>%
+    unite(Details, Role, Description, Uni, City, Country, sep = ", ") %>% 
   CV_table()
+  
 ``` 
 
 \vspace{-0.5cm}
 ## Supervision
 \vspace{-0.1cm}
 ```{r Supervision, results = 'asis'}
-teching %>% 
-  filter(Type == "Supervision") %>%
-  mutate(Role = str_c("\\textbf{", Role, "}"),
-         Details = str_c(Role, Details, Uni, City, Country, sep = ", "),
-         Details = str_c(Details, ". ")) %>%
+
+  teching %>% 
+    filter(Type == "Supervision") %>%
+    mutate(Role = str_c("\\textbf{", Role, "}")) %>%
+    unite(Details, Role, Description, Uni, City, Country, sep = ", ") %>% 
   CV_table()
+
 ```
 
 \vspace{-0.5cm}
 ## Lectures/Seminars
 \vspace{-0.1cm}
 ```{r Lectures, results = 'asis'}
-teching %>% 
-  filter(Type == "Lectures") %>%
-  mutate(Role = str_c("\\textbf{", Role, "}"),
-         Details = str_c(Role, Details, Uni, City, Country, sep = ", "),
-         Details = str_c(Details, ". ")) %>%
-  CV_table()
+
+  teching %>% 
+    filter(Type == "Lectures") %>%
+      mutate(Role = str_c("\\textbf{", Role, "}")) %>%
+      unite(Details, Role, Description, Uni, City, Country, sep = ", ") %>% 
+    CV_table()
+  
 ```
 
 \vspace{-0.5cm}
@@ -425,16 +426,13 @@ I have published **`r length(pubs$Type)`** peer-reviewed journal articles, chapt
 ## Peer reviewed articles
 \vspace{-0.1cm}
 ```{r Articles, results = 'asis'}
-pubs %>%
-  filter(Type == "journal-article") %>%
-  mutate(Authors = str_replace_all(Authors, "Elío", "\\\\textbf{Elío}"),  # Bold my surname
-         Volume = str_replace_na(Volume),   
-         Pages = str_replace_na(Pages), 
-         DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", DOI, "}",  sep = ""),
-         Details = str_c(Authors, Title, Journal, Volume, Pages, DOI, sep = ", "),
-         Details = str_replace(Details, "NA,", ""),
-         Details = str_c(Details, ". ")) %>%
-  CV_table()
+
+  pubs %>%
+    filter(Type == "journal-article") %>%
+    mutate(Authors = str_replace_all(Authors, "Elío", "\\\\textbf{Elío}"),  # Bold my surname
+           DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", DOI, "}",  sep = "")) %>%
+    unite(Details, Authors, Title, Journal, Volume, Pages, DOI, sep = ", ", na.rm = TRUE) %>% 
+    CV_table()
 
 ```
 
@@ -443,21 +441,17 @@ pubs %>%
 \vspace{-0.1cm}
 ```{r books, results = 'asis'}
 
-A <- tibble(Year = "2019",
-            Details = "European Commission, Joint Research Centre – Cinelli, G., De Cort, M., Tollefsen, T. (Eds.): European Atlas of Natural Radiation, Publication Office of the European Union, Luxembourg, 2019. ISBN 978-92-76-08259-0, Catalogue number KJ-02-19-425-EN-C, EUR 19425 EN. Printed by Bietlot in Belgium 2019 – 190 pp. – 30.1 cm— 42.4 cm, \\textcolor{blue}{http://dx.doi.org/10.2760/520053}.") # Add document manually 
-
-B <- pubs %>%
-  filter(Type == "book") %>%
-  mutate(Authors = str_replace_all(Authors, "Elío", "\\\\textbf{Elío}"),
-         Volume = str_replace_na(Volume),   # remove NA for collapsing later the string
-         Pages = str_replace_na(Pages), 
-         DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", DOI, "}",  sep = ""),
-         Details = str_c(Authors, Title, Journal, Volume, Pages, DOI, sep = ", "),
-         Details = str_replace(Details, "NA,", ""),
-         Details = str_c(Details, ". ")) %>%
-  select(Year, Details)  
-
-bind_rows(A, B) %>%
-  CV_table()
+  A <- tibble(Year = "2019",
+              Details = "European Commission, Joint Research Centre – Cinelli, G., De Cort, M., Tollefsen, T. (Eds.): European Atlas of Natural Radiation, Publication Office of the European Union, Luxembourg, 2019. ISBN 978-92-76-08259-0, Catalogue number KJ-02-19-425-EN-C, EUR 19425 EN. Printed by Bietlot in Belgium 2019 – 190 pp. – 30.1 cm— 42.4 cm, \\textcolor{blue}{http://dx.doi.org/10.2760/520053}.") # Add document manually 
+  
+  B <- pubs %>%
+    filter(Type == "book") %>%
+    mutate(Authors = str_replace_all(Authors, "Elío", "\\\\textbf{Elío}"),
+           DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", DOI, "}",  sep = "")) %>%
+    unite(Details, Authors, Title, Journal, Volume, Pages, DOI, sep = ", ", na.rm = TRUE) %>% 
+    select(Year, Details)  
+  
+  bind_rows(A, B) %>%
+    CV_table()
 
 ```
