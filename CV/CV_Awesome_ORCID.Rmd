@@ -62,41 +62,47 @@ source("Escape_latex_specials.R")
   bold_text <- function(x) {x <- str_c("\\textbf{", x, "}")}
 
 # Extract publication information 
-  Authors <- vector()
-  for (i in seq_along(wks[[id]]$works$work.contributors.contributor)) {
-    Authors[[i]] <-str_c(wks[[id]]$works$work.contributors.contributor[[i]]$`credit-name.value`, collapse = "; ")
-  }
-  
-  DOI <- vector()
-  for (i in seq_along(wks[[id]]$works$work.contributors.contributor)) {
-    DOI[[i]] <- wks[[id]]$works$`work.external-ids.external-id`[[i]]$`external-id-value`[1]
-  }
-  
-  pubs <- tibble(Type = wks[[id]]$works$work.type,
-                 Year = wks[[id]]$works$`work.publication-date.year.value`,
-                 Authors = Authors,
-                 Title = wks[[id]]$works$work.title.title.value,
-                 Journal = wks[[id]]$works$`work.journal-title.value`,
-                 DOI = DOI) %>%
-    distinct(DOI, .keep_all = TRUE) %>% 
-    mutate(DOI = replace(DOI, DOI == "2-s2.0-84899952872", "10.30955/gnj.001242"), 
-           DOI = replace(DOI, DOI == "2-s2.0-84899963838", "10.30955/gnj.001241"),
-           Authors = replace_my_name(Authors)) %>%
-    filter(Type == "journal-article" | Type == "book")      
+  pubs <- wks[[id]] %>% 
+    pluck("works") %>% 
+    bind_rows() %>% 
+    as_tibble() %>% 
+    unnest(`work.external-ids.external-id`) %>% 
+    group_by(`work.put-code`) %>% 
+    summarize(Pub_type = work.type,
+              Pub_year = `work.publication-date.year.value`,
+              Pub_authors = `work.contributors.contributor`,
+              Pub_title = work.title.title.value,
+              Pub_journal = `work.journal-title.value`,
+              Pub_DOI = `external-id-value`) %>% 
+    ungroup() %>% 
+    distinct(Pub_title, .keep_all = TRUE) %>%
+    # Get authors
+    unnest(Pub_authors) %>% 
+    group_by(Pub_title) %>% 
+    mutate(Pub_authors = paste(`credit-name.value`, collapse = ", ")) %>% 
+    ungroup() %>% 
+    select(starts_with("Pub")) %>% 
+    distinct(Pub_title, .keep_all = TRUE) %>% 
+    # Correct some DOIs and my surname
+    mutate(Pub_DOI = replace(Pub_DOI, Pub_DOI == "2-s2.0-84899952872", "10.30955/gnj.001242"), 
+           Pub_DOI = replace(Pub_DOI, Pub_DOI == "2-s2.0-84899963838", "10.30955/gnj.001241"),
+           Pub_authors = replace_my_name(Pub_authors)) %>%
+    # Only articles and books chapters
+    filter(Pub_type == "journal-article" | Pub_type == "book")      
   
 # Add volume and pages 
-  VP <- rcrossref::cr_cn(dois = pubs$DOI, format = "bibtex")
+  VP <- rcrossref::cr_cn(dois = pubs$Pub_DOI, format = "bibtex")
   
   pubs <- pubs %>%
-    mutate(Volume = str_match(VP, "volume = \\{(.*[0-9])")[,2],
-           Pages = str_match(VP, "pages = \\{(.*[0-9])")[,2]) 
+    mutate(Pub_volume = str_match(VP, "volume = \\{(.*[0-9])")[,2],
+           Pub_pages = str_match(VP, "pages = \\{(.*[0-9])")[,2]) 
 # Remove latex symbols for knit
   pubs <- pubs %>%
-    mutate(Authors = Escape_latex_specials(Authors),
-           Title   = Escape_latex_specials(Title),
-           Journal = Escape_latex_specials(Journal),
-           DOI     = Escape_latex_specials(DOI),
-           DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", DOI, "}",  sep = "")) # Link to the article
+    mutate(Pub_authors = Escape_latex_specials(Pub_authors),
+           Pub_title   = Escape_latex_specials(Pub_title),
+           Pub_journal = Escape_latex_specials(Pub_journal),
+           Pub_DOI     = Escape_latex_specials(Pub_DOI),
+           Pub_DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", Pub_DOI, "}",  sep = "")) # Link to the article
 ```
   
 ```{r GS}
@@ -144,7 +150,9 @@ My research interests are:
     mutate(Year_End = str_sub(Year_End, -2), 
            Title = bold_text(Title)) %>%
     unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
-    unite(Details, Title, Uni, City, Country, sep = ", ", na.rm = TRUE) %>% 
+    unite(Details, Title, Uni, City, Country, sep = ", ", na.rm = TRUE) %>%
+    select(Year, Details) %>%
+    arrange(desc(Year)) %>% 
     CV_table()
   
 ```
@@ -175,6 +183,8 @@ My research interests are:
            Role = bold_text(Role)) %>%
     unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
     unite(Details, Role, Company, Depart, City, Country, sep = ", ", na.rm = TRUE) %>% 
+    select(Year, Details) %>%
+    arrange(desc(Year)) %>% 
     CV_table()
   
 ```
@@ -205,6 +215,8 @@ My research interests are:
            Role = bold_text(Role)) %>%
     unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
     unite(Details, Role, Company, Depart, City, Country, sep = ", ", na.rm = TRUE) %>% 
+    select(Year, Details) %>%
+    arrange(desc(Year)) %>% 
     CV_table()
   
 ```
@@ -233,7 +245,9 @@ My research interests are:
            Country    = "membership-summary.organization.address.country") %>% 
     mutate(Company = bold_text(Company)) %>%
     unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
-    unite(Details, Company, Depart, City, Country, sep = ", ", na.rm = TRUE) %>% 
+    unite(Details, Company, Depart, City, Country, sep = ", ", na.rm = TRUE) %>%
+    select(Year, Details) %>%
+    arrange(desc(Year)) %>% 
     CV_table() 
   
 ```
@@ -264,6 +278,8 @@ My research interests are:
            Company = bold_text(Company)) %>%
     unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
     unite(Details, Company, Depart, City, Country, sep = ", ", na.rm = TRUE) %>% 
+    select(Year, Details) %>%
+    arrange(desc(Year)) %>% 
     CV_table()
   
 ```
@@ -300,8 +316,10 @@ My research interests are:
     mutate(Year_End = str_sub(Year_End, -2), 
            Title = bold_text(Title)) %>%
     unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>%
-    unite(Details, Title, Company, City, Country, sep = ", ", na.rm = TRUE) %>% 
-  CV_table()
+    unite(Details, Title, Company, City, Country, sep = ", ", na.rm = TRUE) %>%
+    select(Year, Details) %>%
+    arrange(desc(Year)) %>% 
+    CV_table()
 
 ``` 
 \vspace{-0.5cm}
@@ -309,12 +327,14 @@ My research interests are:
 # Honours and Awards
 \vspace{-0.1cm}
 ```{r awards, results = 'asis'}
-
+  
   df_fund %>% 
     filter(Type == "award") %>%
     mutate(Title = bold_text(Title)) %>%
     rename(Year = Year_Start) %>%
     unite(Details, Title, Company, City, Country, sep = ", ", na.rm = TRUE) %>% 
+    select(Year, Details) %>%
+    arrange(desc(Year)) %>% 
     CV_table()
 
 ```
@@ -352,7 +372,9 @@ teching <- tribble(~Year, ~Role, ~City, ~Country, ~Description, ~Uni, ~Type,
     filter(Type == "PhD Examiner") %>%
     mutate(Role = bold_text(Role)) %>%
     unite(Details, Role, Description, Uni, City, Country, sep = ", ") %>% 
-  CV_table()
+    select(Year, Details) %>%
+    arrange(desc(Year)) %>% 
+    CV_table()
   
 ``` 
 
@@ -365,7 +387,9 @@ teching <- tribble(~Year, ~Role, ~City, ~Country, ~Description, ~Uni, ~Type,
     filter(Type == "Supervision") %>%
     mutate(Role = bold_text(Role)) %>%
     unite(Details, Role, Description, Uni, City, Country, sep = ", ") %>% 
-  CV_table()
+    select(Year, Details) %>%
+    arrange(desc(Year)) %>% 
+    CV_table()
 
 ```
 
@@ -376,8 +400,10 @@ teching <- tribble(~Year, ~Role, ~City, ~Country, ~Description, ~Uni, ~Type,
 
   teching %>% 
     filter(Type == "Lectures") %>%
-      mutate(Role = bold_text(Role)) %>%
-      unite(Details, Role, Description, Uni, City, Country, sep = ", ") %>% 
+    mutate(Role = bold_text(Role)) %>%
+    unite(Details, Role, Description, Uni, City, Country, sep = ", ") %>% 
+    select(Year, Details) %>%
+    arrange(desc(Year)) %>% 
     CV_table()
   
 ```
@@ -385,7 +411,7 @@ teching <- tribble(~Year, ~Role, ~City, ~Country, ~Description, ~Uni, ~Type,
 \vspace{-0.5cm}
 # Publications
 \vspace{-0.1cm}
-I have published **`r length(pubs$Type)`** peer-reviewed journal articles, chapters or books on Environmental Science topics. I have also presented my research at 3 invited talks, and in several national and international conferences including AGU, EGU, EAGE, IGC and Goldschmidt. My metrics in **Google Scholar** are:
+I have published **`r length(pubs$Pub_type)`** peer-reviewed journal articles, chapters or books on Environmental Science topics. I have also presented my research at 3 invited talks, and in several national and international conferences including AGU, EGU, EAGE, IGC and Goldschmidt. My metrics in **Google Scholar** are:
 
 \vspace{8pt}
 + Total citations: `r My_GS$total_cites`
@@ -398,8 +424,10 @@ I have published **`r length(pubs$Type)`** peer-reviewed journal articles, chapt
 ```{r Articles, results = 'asis'}
 
   pubs %>%
-    filter(Type == "journal-article") %>%
-    unite(Details, Authors, Title, Journal, Volume, Pages, DOI, sep = ", ", na.rm = TRUE) %>% 
+    filter(Pub_type == "journal-article") %>%
+    unite(Pub_details, Pub_authors, Pub_title, Pub_journal, Pub_volume, Pub_pages, Pub_DOI, sep = ", ", na.rm = TRUE) %>% 
+    select(Pub_year, Pub_details) %>%
+    arrange(desc(Pub_year)) %>%
     CV_table()
 
 ```
@@ -409,13 +437,14 @@ I have published **`r length(pubs$Type)`** peer-reviewed journal articles, chapt
 \vspace{-0.1cm}
 ```{r books, results = 'asis'}
 
-  A <- tibble(Year = "2019",
-              Details = "European Commission, Joint Research Centre – Cinelli, G., De Cort, M., Tollefsen, T. (Eds.): European Atlas of Natural Radiation, Publication Office of the European Union, Luxembourg, 2019. ISBN 978-92-76-08259-0, Catalogue number KJ-02-19-425-EN-C, EUR 19425 EN. Printed by Bietlot in Belgium 2019 – 190 pp. – 30.1 cm— 42.4 cm, \\textcolor{blue}{http://dx.doi.org/10.2760/520053}.") # Add document manually 
+  A <- tibble(Pub_year = "2019",
+              Pub_details = "European Commission, Joint Research Centre – Cinelli, G., De Cort, M., Tollefsen, T. (Eds.): European Atlas of Natural Radiation, Publication Office of the European Union, Luxembourg, 2019. ISBN 978-92-76-08259-0, Catalogue number KJ-02-19-425-EN-C, EUR 19425 EN. Printed by Bietlot in Belgium 2019 – 190 pp. – 30.1 cm— 42.4 cm, \\textcolor{blue}{http://dx.doi.org/10.2760/520053}.") # Add document manually 
   
   B <- pubs %>%
-    filter(Type == "book") %>%
-    unite(Details, Authors, Title, Journal, Volume, Pages, DOI, sep = ", ", na.rm = TRUE) %>% 
-    select(Year, Details)  
+    filter(Pub_type == "book") %>%
+    unite(Pub_details, Pub_authors, Pub_title, Pub_journal, Pub_volume, Pub_pages, Pub_DOI, sep = ", ", na.rm = TRUE) %>% 
+    select(Pub_year, Pub_details) %>%
+    arrange(desc(Pub_year)) 
   
   bind_rows(A, B) %>%
     CV_table()
