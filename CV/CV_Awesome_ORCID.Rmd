@@ -374,7 +374,10 @@ teching <- tribble(~Year, ~Role, ~City, ~Country, ~Description, ~Uni, ~Type,
     unite(Details, Role, Description, Uni, City, Country, sep = ", ") %>% 
     select(Year, Details) %>%
     arrange(desc(Year)) %>% 
-    CV_table()
+    knitr::kable(col.names = NULL, escape = FALSE, align = 1L, booktabs = TRUE) %>%
+    kableExtra::kable_styling(full_width = F) %>%
+    kableExtra::column_spec(1, color = "darktext", width = "3.5em") %>%
+    kableExtra::column_spec(2, color = "darktext", width = "40.5em")
   
 ``` 
 
