@@ -29,8 +29,8 @@ library(kableExtra)
 library(rorcid)
 library(rcrossref)
   
-source("CV_Table.R")
-source("Escape_Latex_Specials.R")
+source("CV_table.R")
+source("Escape_latex_specials.R")
 ```
 
 ```{r ORCID_Works}
@@ -48,47 +48,66 @@ source("Escape_Latex_Specials.R")
   id <- "0000-0003-0624-2345"
   out <- works(orcid_id(id)) 
   wks <- orcid_works(id, out$`put-code`)
-  
+
+# Alternative names and bold my surname in the pdf
+  replace_my_name <- function(x) {
+    x <- str_replace_all(x, "Elio", "Elío")
+    x <- str_replace_all(x, "de Elío", "Elío")
+    x <- str_replace_all(x, "Medina, J.E.", "Elío, J.")
+    x <- str_replace_all(x, "Elío", "\\\\textbf{Elío}")
+    }
+
+# Bold text in the pdf
+  bold_text <- function(x) {x <- str_c("\\textbf{", x, "}")}
+
 # Extract publication information 
-  Authors <- vector()
-  for (i in seq_along(wks[[id]]$works$work.contributors.contributor)) {
-    Authors[[i]] <-str_c(wks[[id]]$works$work.contributors.contributor[[i]]$`credit-name.value`, collapse = "; ")
-  }
-  
-  DOI <- vector()
-  for (i in seq_along(wks[[id]]$works$work.contributors.contributor)) {
-    DOI[[i]] <- wks[[id]]$works$`work.external-ids.external-id`[[i]]$`external-id-value`[1]
-  }
-  
-  pubs <- tibble(Type = wks[[id]]$works$work.type,
-                 Year = wks[[id]]$works$`work.publication-date.year.value`,
-                 Authors = Authors,
-                 Title = wks[[id]]$works$work.title.title.value,
-                 Journal = wks[[id]]$works$`work.journal-title.value`,
-                 DOI = DOI) %>%
-    distinct(DOI, .keep_all = TRUE) %>% 
-    mutate(DOI = replace(DOI, DOI == "2-s2.0-84899952872", "10.30955/gnj.001242"), 
-           DOI = replace(DOI, DOI == "2-s2.0-84899963838", "10.30955/gnj.001241"),
-           Authors = str_replace_all(Authors, "Elio", "Elío"),
-           Authors = str_replace_all(Authors, "de Elío", "Elío")) %>%
-    filter(Type == "journal-article" | Type == "book")      
+  pubs <- wks[[id]] %>% 
+    pluck("works") %>% 
+    bind_rows() %>% 
+    as_tibble() %>% 
+    unnest(`work.external-ids.external-id`) %>% 
+    group_by(`work.put-code`) %>% 
+    summarize(Pub_type = work.type,
+              Pub_year = `work.publication-date.year.value`,
+              Pub_authors = `work.contributors.contributor`,
+              Pub_title = work.title.title.value,
+              Pub_journal = `work.journal-title.value`,
+              Pub_DOI = `external-id-value`) %>% 
+    ungroup() %>% 
+    distinct(Pub_title, .keep_all = TRUE) %>%
+    # Get authors
+    unnest(Pub_authors) %>% 
+    group_by(Pub_title) %>% 
+    mutate(Pub_authors = paste(`credit-name.value`, collapse = ", ")) %>% 
+    ungroup() %>% 
+    select(starts_with("Pub")) %>% 
+    distinct(Pub_title, .keep_all = TRUE) %>% 
+    # Correct some DOIs and my surname
+    mutate(Pub_DOI = replace(Pub_DOI, Pub_DOI == "2-s2.0-84899952872", "10.30955/gnj.001242"), 
+           Pub_DOI = replace(Pub_DOI, Pub_DOI == "2-s2.0-84899963838", "10.30955/gnj.001241"),
+           Pub_authors = replace_my_name(Pub_authors)) %>%
+    # Only articles and books chapters
+    filter(Pub_type == "journal-article" | Pub_type == "book")      
   
 # Add volume and pages 
-  VP <- rcrossref::cr_cn(dois = pubs$DOI, format = "bibtex")
+  VP <- rcrossref::cr_cn(dois = pubs$Pub_DOI, format = "bibtex")
   
   pubs <- pubs %>%
-    mutate(Volume = str_match(VP, "volume = \\{(.*[0-9])")[,2],
-           Pages = str_match(VP, "pages = \\{(.*[0-9])")[,2]) 
+    mutate(Pub_volume = str_match(VP, "volume = \\{(.*[0-9])")[,2],
+           Pub_pages = str_match(VP, "pages = \\{(.*[0-9])")[,2]) 
 # Remove latex symbols for knit
   pubs <- pubs %>%
-    mutate(Authors = Escape_Latex_Specials(Authors),
-           Title   = Escape_Latex_Specials(Title),
-           Journal = Escape_Latex_Specials(Journal),
-           DOI     = Escape_Latex_Specials(DOI))
+    mutate(Pub_authors = Escape_latex_specials(Pub_authors),
+           Pub_title   = Escape_latex_specials(Pub_title),
+           Pub_journal = Escape_latex_specials(Pub_journal),
+           Pub_DOI     = Escape_latex_specials(Pub_DOI),
+           Pub_DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", Pub_DOI, "}",  sep = "")) # Link to the article
 ```
   
 ```{r GS}
-My_GS <- scholar::get_profile("NF5SYm8AAAAJ&hl")
+
+  My_GS <- scholar::get_profile("NF5SYm8AAAAJ&hl")
+
 ```
 
 ```{r Invited_talks_table, results = 'asis'}
@@ -105,7 +124,6 @@ Talks <- tribble(~Year, ~Authors, ~Title, ~Conference, ~Uni, ~Country,
 
                  
 ```
-
 
 ```{r Conferences_table, results = 'asis'}
 
@@ -188,7 +206,6 @@ Conferences <- tribble(~Year, ~Authors, ~Title, ~Conference, ~Country,
 
 ```
  
- 
 \vspace{-0.1cm}
 \footnotesize 
 \rightline{\textcolor{darktext}{"Expert on environmental research, statistics, spatial data analysis, and modelling."}} 
@@ -207,37 +224,34 @@ I have published **`r length(pubs$Type)`** peer-reviewed journal articles, chapt
 
 ## Peer reviewed articles
 \vspace{-0.1cm}
-```{r articles, results = 'asis'}
-pubs %>%
-  filter(Type == "journal-article") %>%
-  mutate(Authors = str_replace_all(Authors, "Elío", "\\\\textbf{Elío}"),  # Bold my surname
-         Volume = str_replace_na(Volume),   
-         Pages = str_replace_na(Pages), 
-         DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", DOI, "}",  sep = ""),
-         Details = str_c(Authors, Title, Journal, Volume, Pages, DOI, sep = ", "),
-         Details = str_replace(Details, "NA,", ""),
-         Details = str_c(Details, ". ")) %>%
-  select(Year, Details) %>%
-  arrange(desc(Year)) %>%
-  CV_Table()
+```{r Articles, results = 'asis'}
+
+  pubs %>%
+    filter(Pub_type == "journal-article") %>%
+    unite(Pub_details, Pub_authors, Pub_title, Pub_journal, Pub_volume, Pub_pages, Pub_DOI, sep = ", ", na.rm = TRUE) %>% 
+    select(Pub_year, Pub_details) %>%
+    arrange(desc(Pub_year)) %>%
+    CV_table()
+
 ```
 
 \vspace{-0.5cm}
 ## Book chapters
 \vspace{-0.1cm}
 ```{r books, results = 'asis'}
-pubs %>%
-  filter(Type == "book") %>%
-  mutate(Authors = str_replace_all(Authors, "Elío", "\\\\textbf{Elío}"),
-         Volume = str_replace_na(Volume),   # remove NA for collapsing later the strine
-         Pages = str_replace_na(Pages), 
-         DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", DOI, "}",  sep = ""),
-         Details = str_c(Authors, Title, Journal, Volume, Pages, DOI, sep = ", "),
-         Details = str_replace(Details, "NA,", ""),
-         Details = str_c(Details, ". ")) %>%
-  select(Year, Details) %>%
-  arrange(desc(Year)) %>%
-  CV_Table()
+
+  A <- tibble(Pub_year = "2019",
+              Pub_details = "European Commission, Joint Research Centre – Cinelli, G., De Cort, M., Tollefsen, T. (Eds.): European Atlas of Natural Radiation, Publication Office of the European Union, Luxembourg, 2019. ISBN 978-92-76-08259-0, Catalogue number KJ-02-19-425-EN-C, EUR 19425 EN. Printed by Bietlot in Belgium 2019 – 190 pp. – 30.1 cm— 42.4 cm, \\textcolor{blue}{http://dx.doi.org/10.2760/520053}.") # Add document manually 
+  
+  B <- pubs %>%
+    filter(Pub_type == "book") %>%
+    unite(Pub_details, Pub_authors, Pub_title, Pub_journal, Pub_volume, Pub_pages, Pub_DOI, sep = ", ", na.rm = TRUE) %>% 
+    select(Pub_year, Pub_details) %>%
+    arrange(desc(Pub_year)) 
+  
+  bind_rows(A, B) %>%
+    CV_table()
+
 ```
 
 \vspace{-0.5cm}
@@ -250,7 +264,7 @@ Talks %>%
          Details = str_c(Details, ". ")) %>%
   select(Year, Details) %>%
   arrange(desc(Year)) %>%
-  CV_Table()
+  CV_table()
 ```
 
 \vspace{-0.5cm}
@@ -264,6 +278,6 @@ Conferences %>%
          Details = str_c(Details, ". ")) %>%
   select(Year, Details) %>%
   arrange(desc(Year)) %>%
-  CV_Table()
+  CV_table()
 
 ```
