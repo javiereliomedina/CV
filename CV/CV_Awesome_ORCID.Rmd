@@ -119,7 +119,7 @@ source("Escape_latex_specials.R")
 \vspace{0.5cm}
 # Career Summary
 \vspace{-0.1cm}
-I am an engineer from the Technical University of Madrid (Spain) with 10+ years of experience in civil engineering, risk analysis and prevention, programming, and environmental sciences. I have done an MSc in Environmental Research, Modelling and Risk Assessment, and a PhD in Environmental Sciences. My degrees, and posterior professional development, have qualified me in a wide range of topics. I have worked on radon mapping, in monitoring geological storage of $CO_{2}$, and in geochemical characterization of contaminated sites. Recently I have started a postdoc in Geoinformatics on Migration Modelling.
+I am an Engineer from the Technical University of Madrid (Spain) with 10+ years of research experience. I have done an MSc in Environmental Research, Modelling and Risk Assessment, and a PhD in Geosciences. My degrees, and posterior professional development, have qualified me in a wide range of topics. I have experience, for example, in monitoring geological storage of $CO_2$, in geochemical characterization of contaminated sites, and in developing new methods for measuring microplastics. Furthermore, I have applied advanced modelling to evaluate the influence of geology on indoor radon levels. Recently I have started a postdoc in Geoinformatics on Migration Modelling at Aalborg University (Denmark). I am collaborating with the research group of Applied Marine Microbiology at Høgskulen på Vestlandet (Norway), where I have presented several projects for funding to the Norwegian Research Council, NordForsk, and the European Commission (Marie Sklodowska-Curie).
 
 My research interests are: 
 
