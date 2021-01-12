@@ -113,7 +113,7 @@ source("Escape_latex_specials.R")
 
 ```
 
-\vspace{-0.1cm}
+\vspace{0.5cm}
 \footnotesize 
 \rightline{\textcolor{darktext}{"Expert on environmental research, statistics, spatial data analysis, and modelling."}} 
 \normalsize
