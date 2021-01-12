@@ -13,10 +13,12 @@ twitter: Elio_Javi
 output: vitae::awesomecv
 header-includes:
   - \usepackage{colortbl}
+  - \usepackage{longtable}
+  - \usepackage{float}
   - \arrayrulecolor{white}
-  - \photo[circle, noedge, left]{photo.png}
   - \definecolor{darktext}{HTML}{414141}
   - \definecolor{blue}{rgb}{0.0, 0.0, 1.0}
+  
 ---
 
 ```{r setup, include = FALSE}
