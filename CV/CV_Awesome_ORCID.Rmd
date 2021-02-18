@@ -6,7 +6,7 @@ position: Researcher | Environemntal sciences | Data Sciences
 address: Haugesund (Norway)
 phone: +47 4125 91 17
 email: javiereliomedina@gmail.com
-website: https://javierelio.netlify.com/
+website: https://javierelio.netlify.app/
 github: javiereliomedina
 linkedin: javiereliomedina
 twitter: Elio_Javi
@@ -121,11 +121,13 @@ source("Escape_latex_specials.R")
 \vspace{0.5cm}
 # Career Summary
 \vspace{-0.1cm}
-I am an Engineer from the Technical University of Madrid (Spain) with 10+ years of research experience. I have done an MSc in Environmental Research, Modelling and Risk Assessment, and a PhD in Geosciences. My degrees, and posterior professional development, have qualified me in a wide range of topics. I have experience, for example, in monitoring geological storage of $CO_2$, in geochemical characterization of contaminated sites, and in developing new methods for measuring microplastics. Furthermore, I have applied advanced modelling to evaluate the influence of geology on indoor radon levels. Recently I have started a postdoc in Geoinformatics on Migration Modelling at Aalborg University (Denmark). I am collaborating with the research group of Applied Marine Microbiology at Høgskulen på Vestlandet (Norway), where I have presented several projects for funding to the Norwegian Research Council, NordForsk, and the European Commission (Marie Sklodowska-Curie).
+I am an Engineer from the Technical University of Madrid (Spain) with 10+ years of research and teaching experience. I have done an MSc in Environmental Research, Modelling and Risk Assessment, and a PhD in Earth Science. My main research area is environmental science, with a particular interest in radon as a natural hazard. My prior experience is in soil pollution, hydrocarbon exploration, fractured media characterization and geological storage of $CO_2$. Recently, I have started a postdoc in Geoinformatics on Migration Modelling at Aalborg University (Denmark). I am collaborating with the research group of Applied Marine Microbiology at Høgskulen på Vestlandet (Norway), where I have presented several projects for funding to the Norwegian Research Council, NordForsk, and the European Commission (Marie Sklodowska-Curie).
 
 My research interests are: 
 
 +	Environmental risk assessment
++ Radiation protection
++ Radon mapping
 + Statistics, spatial data analysis, and geostatistics
 + Geographic information systems
 + R language
@@ -223,7 +225,7 @@ My research interests are:
   
 ```
 
-\vspace{-0.5cm}
+\vspace{1cm}
 # Professional memberships
 \vspace{-0.1cm}
 ```{r memberships, results = 'asis'}
@@ -416,7 +418,7 @@ teching <- tribble(~Year, ~Role, ~City, ~Country, ~Description, ~Uni, ~Type,
 \vspace{-0.5cm}
 # Publications
 \vspace{-0.1cm}
-I have published **`r length(pubs$Pub_type)`** peer-reviewed journal articles, chapters or books on Environmental Science topics. I have also presented my research at 3 invited talks, and in several national and international conferences including AGU, EGU, EAGE, IGC and Goldschmidt. My metrics in **Google Scholar** are:
+I have published **`r 1+length(pubs$Pub_type)`** peer-reviewed journal articles, chapters or books on Environmental Science topics. I have also presented my research at 3 invited talks, and in several national and international conferences including AGU, EGU, EAGE, IGC and Goldschmidt. My metrics in **Google Scholar** are:
 
 \vspace{8pt}
 + Total citations: `r My_GS$total_cites`
