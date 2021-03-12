@@ -126,8 +126,6 @@ I am an Engineer from the Technical University of Madrid (Spain) with 10+ years 
 My research interests are: 
 
 +	Environmental risk assessment
-+ Radiation protection
-+ Radon mapping
 + Statistics, spatial data analysis, and geostatistics
 + Geographic information systems
 + R language
@@ -225,7 +223,7 @@ My research interests are:
   
 ```
 
-\vspace{1cm}
+\vspace{-0.5cm}
 # Professional memberships
 \vspace{-0.1cm}
 ```{r memberships, results = 'asis'}
