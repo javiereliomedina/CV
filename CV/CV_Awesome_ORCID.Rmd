@@ -12,13 +12,13 @@ linkedin: javiereliomedina
 twitter: Elio_Javi
 output: vitae::awesomecv
 header-includes:
+  - \photo[circle, noedge, left]{photo.png}
   - \usepackage{colortbl}
   - \usepackage{longtable}
   - \usepackage{float}
   - \arrayrulecolor{white}
   - \definecolor{darktext}{HTML}{414141}
   - \definecolor{blue}{rgb}{0.0, 0.0, 1.0}
-  
 ---
 
 ```{r setup, include = FALSE}
@@ -106,32 +106,62 @@ source("Escape_latex_specials.R")
            Pub_DOI     = Escape_latex_specials(Pub_DOI),
            Pub_DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", Pub_DOI, "}",  sep = "")) # Link to the article
 ```
-  
+
 ```{r GS}
 
   My_GS <- scholar::get_profile("NF5SYm8AAAAJ&hl")
 
 ```
 
-\vspace{0.5cm}
+```{r teaching}
+
+teching <- tribble(~Year, ~Role, ~City, ~Country, ~Description, ~Uni, ~Type,
+2017,	"External PhD examiner",	"Madrid", "ES",	"Thesis: “Integration of remote sensing and statistical techniques for detecting CO2 leaks in geological storage areas through the study of natural analogues, Miguel A. Rincones Salinas", "Technical University of Madrid",	"PhD Examiner",
+
+2017,	"Co-supervisor of a Master thesis in Environmental Sciences",	"Dublin", "IE",	"Assessing the contribution of Quaternary deposits to the soil radon budget in Ireland", "Trinity College Dublin, School of Natural Sciences, Geology", "Supervision",
+
+2017,	"Co-supervisor of an Earth Science Dissertation",	"Dublin", "IE", "Evaluating two techniques of soil gas radon detection in application, performance and against indoor radon concentrations", "Trinity College Dublin, School of Natural Sciences, Geology", "Supervision",
+
+2016,	"Co-supervisor of a Master thesis in Environmental Sciences",	"Dublin", "IE", "Linking radon concentrations between the natural and built environments", "Trinity College Dublin, School of Natural Sciences, Geology", "Supervision",
+
+2018,	"Teaching assistant",	"Dublin", "IE",	"10 day geological residential field-school in SE Spain", "Trinity College Dublin, School of Natural Sciences, Geology", "Lectures",
+
+2017,	"GIS module in MSc Environmental Science", "Dublin", "IE",	"Lecture: A new indoor radon risk map of Ireland. Geology, School of Natural Sciences", "Trinity College Dublin, School of Natural Sciences, Geology", "Lectures",
+
+2016,	"Michaelmas Semester 2016 - Geology Seminar Series", "Dublin", "IE",	"Modelling Indoor Radon Concentration: Towards a High-Resolution Indoor Radon Map of Ireland",  "Trinity College Dublin, School of Natural Sciences, Geology", "Lectures",
+
+2016,	"Teaching assistant",	"Dublin", "IE",	"10 day geological residential field-school in SE Spain", "Trinity College Dublin, School of Natural Sciences, Geology", "Lectures",
+
+2013,	"Summer school in Carbon Capture and Storage",	"Ponferrada", "ES", "Surface and subsurface monitoring of a CO2 storage site: theory and practice", "University of León", "Lectures"
+)
+
+```
+
+
+\vspace{-0.1cm}
 \footnotesize 
 \rightline{\textcolor{darktext}{"Expert on environmental research, statistics, spatial data analysis, and modelling."}} 
 \normalsize
 
 \vspace{0.5cm}
+
 # Career Summary
+
 \vspace{-0.1cm}
+
 I am an Engineer from the Technical University of Madrid (Spain) with 10+ years of research and teaching experience. I have done an MSc in Environmental Research, Modelling and Risk Assessment, and a PhD in Earth Science. My main research area is environmental science, with a particular interest in radon as a natural hazard. My prior experience is in soil pollution, hydrocarbon exploration, fractured media characterization and geological storage of $CO_2$. Recently, I have started a postdoc in Geoinformatics on Migration Modelling at Aalborg University (Denmark). I am collaborating with the research group of Applied Marine Microbiology at Høgskulen på Vestlandet (Norway), where I have presented several projects for funding to the Norwegian Research Council, NordForsk, and the European Commission (Marie Sklodowska-Curie).
 
-My research interests are: 
+My research interests are:
 
-+	Environmental risk assessment
-+ Statistics, spatial data analysis, and geostatistics
-+ Geographic information systems
-+ R language
+-   Environmental risk assessment
+-   Statistics, spatial data analysis, and geostatistics
+-   Geographic information systems
+-   R language
 
 # Education
+
 \vspace{-0.1cm}
+
 ```{r Education,  results = 'asis'}
 
   orcid_educations(id)[[id]] %>%
@@ -160,8 +190,11 @@ My research interests are:
 ```
 
 \vspace{-0.5cm}
+
 # Experience
+
 \vspace{-0.1cm}
+
 ```{r experience, results = 'asis'}
 
   orcid_employments(id)[[id]] %>%
@@ -192,9 +225,12 @@ My research interests are:
 ```
 
 \vspace{-0.5cm}
+
 # Invited Positions
+
 \vspace{-0.1cm}
-```{r inv_positions, results = 'asis'} 
+
+```{r inv_positions, results = 'asis'}
 
   orcid_invited_positions(id)[[id]] %>%
     pluck("affiliation-group", "summaries") %>% 
@@ -223,9 +259,12 @@ My research interests are:
   
 ```
 
-\vspace{-0.5cm}
+\vspace{1cm}
+
 # Professional memberships
+
 \vspace{-0.1cm}
+
 ```{r memberships, results = 'asis'}
 
   orcid_memberships(id)[[id]] %>%
@@ -255,9 +294,12 @@ My research interests are:
 ```
 
 \vspace{-0.5cm}
+
 # Professional Services
+
 \vspace{-0.1cm}
-```{r Services, results = 'asis'} 
+
+```{r Services, results = 'asis'}
 
   orcid_services(id)[[id]] %>%
     pluck("affiliation-group", "summaries") %>% 
@@ -287,8 +329,11 @@ My research interests are:
 ```
 
 \vspace{-0.5cm}
+
 # Funding projects
+
 \vspace{-0.1cm}
+
 ```{r funding, results = 'asis'}
   
   df_fund <- orcid_fundings(id)[[id]] %>%
@@ -323,11 +368,14 @@ My research interests are:
     arrange(desc(Year)) %>% 
     CV_table()
 
-``` 
+```
+
 \vspace{-0.5cm}
 
 # Honours and Awards
+
 \vspace{-0.1cm}
+
 ```{r awards, results = 'asis'}
   
   df_fund %>% 
@@ -340,52 +388,31 @@ My research interests are:
     CV_table()
 
 ```
+
 \vspace{-0.5cm}
+
 # Teaching Experience
+
+## Lectures/Seminars
+
 \vspace{-0.1cm}
-```{r teaching, results = 'asis'}
 
-teching <- tribble(~Year, ~Role, ~City, ~Country, ~Description, ~Uni, ~Type,
-2017,	"External PhD examiner",	"Madrid", "ES",	"Thesis: “Integration of remote sensing and statistical techniques for detecting CO2 leaks in geological storage areas through the study of natural analogues, Miguel A. Rincones Salinas", "Technical University of Madrid",	"PhD Examiner",
-
-2017,	"Co-supervisor of a Master thesis in Environmental Sciences",	"Dublin", "IE",	"Assessing the contribution of Quaternary deposits to the soil radon budget in Ireland", "Trinity College Dublin, School of Natural Sciences, Geology", "Supervision",
-
-2017,	"Co-supervisor of an Earth Science Dissertation",	"Dublin", "IE", "Evaluating two techniques of soil gas radon detection in application, performance and against indoor radon concentrations", "Trinity College Dublin, School of Natural Sciences, Geology", "Supervision",
-
-2016,	"Co-supervisor of a Master thesis in Environmental Sciences",	"Dublin", "IE", "Linking radon concentrations between the natural and built environments", "Trinity College Dublin, School of Natural Sciences, Geology", "Supervision",
-
-2018,	"Teaching assistant",	"Dublin", "IE",	"10 day geological residential field-school in SE Spain", "Trinity College Dublin, School of Natural Sciences, Geology", "Lectures",
-
-2017,	"GIS module in MSc Environmental Science", "Dublin", "IE",	"Lecture: A new indoor radon risk map of Ireland. Geology, School of Natural Sciences", "Trinity College Dublin, School of Natural Sciences, Geology", "Lectures",
-
-2016,	"Michaelmas Semester 2016 - Geology Seminar Series", "Dublin", "IE",	"Modelling Indoor Radon Concentration: Towards a High-Resolution Indoor Radon Map of Ireland",  "Trinity College Dublin, School of Natural Sciences, Geology", "Lectures",
-
-2016,	"Teaching assistant",	"Dublin", "IE",	"10 day geological residential field-school in SE Spain", "Trinity College Dublin, School of Natural Sciences, Geology", "Lectures",
-
-2013,	"Summer school in Carbon Capture and Storage",	"Ponferrada", "ES", "Surface and subsurface monitoring of a CO2 storage site: theory and practice", "University of León", "Lectures"
-)
-```
- 
-## PhD Examiner
-\vspace{-0.1cm}
-```{r PhD Examiner, results = 'asis'}
+```{r Lectures, results = 'asis'}
 
   teching %>% 
-    filter(Type == "PhD Examiner") %>%
+    filter(Type == "Lectures") %>%
     mutate(Role = bold_text(Role)) %>%
     unite(Details, Role, Description, Uni, City, Country, sep = ", ") %>% 
     select(Year, Details) %>%
     arrange(desc(Year)) %>% 
-    knitr::kable(col.names = NULL, escape = FALSE, align = 1L, booktabs = TRUE) %>%
-    kableExtra::kable_styling(full_width = F) %>%
-    kableExtra::column_spec(1, color = "darktext", width = "3.5em") %>%
-    kableExtra::column_spec(2, color = "darktext", width = "40.5em")
+    CV_table()
   
-``` 
+```
 
-\vspace{-0.5cm}
 ## Supervision
+
 \vspace{-0.1cm}
+
 ```{r Supervision, results = 'asis'}
 
   teching %>% 
@@ -399,33 +426,38 @@ teching <- tribble(~Year, ~Role, ~City, ~Country, ~Description, ~Uni, ~Type,
 ```
 
 \vspace{-0.5cm}
-## Lectures/Seminars
+
+## PhD Examiner
+
 \vspace{-0.1cm}
-```{r Lectures, results = 'asis'}
+
+```{r PhD Examiner, results = 'asis'}
 
   teching %>% 
-    filter(Type == "Lectures") %>%
+    filter(Type == "PhD Examiner") %>%
     mutate(Role = bold_text(Role)) %>%
     unite(Details, Role, Description, Uni, City, Country, sep = ", ") %>% 
     select(Year, Details) %>%
     arrange(desc(Year)) %>% 
+    # Note sure why I get an error with one-row tables, add empty a row with values
+    mutate(Year = as.character(Year)) %>% 
+    bind_rows(tibble(Year = "", Details = " ")) %>% 
     CV_table()
-  
+
 ```
 
-\vspace{-0.5cm}
-# Publications
-\vspace{-0.1cm}
-I have published **`r 1+length(pubs$Pub_type)`** peer-reviewed journal articles, chapters or books on Environmental Science topics. I have also presented my research at 3 invited talks, and in several national and international conferences including AGU, EGU, EAGE, IGC and Goldschmidt. My metrics in **Google Scholar** are:
+\vspace{-0.7cm}
 
-\vspace{8pt}
-+ Total citations: `r My_GS$total_cites`
-+ h-index: `r My_GS$h_index`
-+ i10-index: `r My_GS$i10_index`
-\vspace{8pt}
+# Publications
+
+\vspace{-0.1cm}
+
+I have published **`r 1+length(pubs$Pub_type)`** peer-reviewed journal articles, chapters or books on Environmental Science topics. I have also presented my research at 3 invited talks, and in several national and international conferences.
 
 ## Peer reviewed articles
+
 \vspace{-0.1cm}
+
 ```{r Articles, results = 'asis'}
 
   pubs %>%
@@ -438,8 +470,11 @@ I have published **`r 1+length(pubs$Pub_type)`** peer-reviewed journal articles,
 ```
 
 \vspace{-0.5cm}
+
 ## Book chapters
+
 \vspace{-0.1cm}
+
 ```{r books, results = 'asis'}
 
   A <- tibble(Pub_year = "2019",

@@ -216,7 +216,7 @@ Conferences <- tribble(~Year, ~Authors, ~Title, ~Conference, ~Country,
 \vspace{0.5cm}
 # Publications
 \vspace{-0.1cm}
-I have published **`r length(pubs$Type)`** peer-reviewed journal articles, chapters or books on Environmental Science topics. I have also presented my research at `r length(Talks$Title)` invited talks, and in several national and international conferences. For more information, please visit my [Google Scholar profile](https://scholar.google.com/citations?user=NF5SYm8AAAAJ&hl=en). 
+I have published **`r length(pubs$Type)`** peer-reviewed journal articles, chapters or books on Environmental Science topics. I have also presented my research at `r length(Talks$Title)` invited talks, and in several national and international conferences. 
 
 ## Peer reviewed articles
 \vspace{-0.1cm}
