@@ -43,7 +43,7 @@ source("Escape_latex_specials.R")
 # Restart the R session
 # We can see the key with Sys.getenv("ORCID_TOKEN")
 
-# When possible I choose "Scopus - Elsevier" as the "Preferred Source" and delate the rest
+# When possible I choose "Scopus - Elsevier" as the "Preferred Source" and delete the rest
 # that way all articles will have the same format
 
 # Get works
@@ -216,7 +216,7 @@ Conferences <- tribble(~Year, ~Authors, ~Title, ~Conference, ~Country,
 \vspace{0.5cm}
 # Publications
 \vspace{-0.1cm}
-I have published **`r length(pubs$Type)`** peer-reviewed journal articles, chapters or books on Environmental Science topics. I have also presented my research at `r length(Talks$Title)` invited talks, and in several national and international conferences. 
+I have published **`r 1+length(pubs$Pub_type)`** peer-reviewed journal articles, chapters or books on Environmental Science topics. I have also presented my research at 4 invited talks, and in several national and international conferences.
 
 ## Peer reviewed articles
 \vspace{-0.1cm}

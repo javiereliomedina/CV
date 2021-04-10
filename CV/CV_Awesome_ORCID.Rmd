@@ -452,7 +452,7 @@ My research interests are:
 
 \vspace{-0.1cm}
 
-I have published **`r 1+length(pubs$Pub_type)`** peer-reviewed journal articles, chapters or books on Environmental Science topics. I have also presented my research at 3 invited talks, and in several national and international conferences.
+I have published **`r 1+length(pubs$Pub_type)`** peer-reviewed journal articles, chapters or books on Environmental Science topics. I have also presented my research at 4 invited talks, and in several national and international conferences.
 
 ## Peer reviewed articles
 
