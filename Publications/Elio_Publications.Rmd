@@ -12,9 +12,11 @@ linkedin: javiereliomedina
 twitter: Elio_Javi
 output: vitae::awesomecv
 header-includes:
-  - \usepackage{colortbl}
-  - \arrayrulecolor{white}
   - \photo[circle, noedge, left]{photo.png}
+  - \usepackage{colortbl}
+  - \usepackage{longtable}
+  - \usepackage{float}
+  - \arrayrulecolor{white}
   - \definecolor{darktext}{HTML}{414141}
   - \definecolor{blue}{rgb}{0.0, 0.0, 1.0}
 ---
@@ -214,13 +216,7 @@ Conferences <- tribble(~Year, ~Authors, ~Title, ~Conference, ~Country,
 \vspace{0.5cm}
 # Publications
 \vspace{-0.1cm}
-I have published **`r length(pubs$Type)`** peer-reviewed journal articles, chapters or books on Environmental Science topics. I have also presented my research at `r length(Talks$Title)` invited talks, and in several national and international conferences including AGU, EGU, EAGE, IGC and Goldschmidt. My metrics in **Google Scholar** are:
-
-\vspace{8pt}
-+ Total citations: `r My_GS$total_cites`
-+ h-index: `r My_GS$h_index`
-+ i10-index: `r My_GS$i10_index`
-\vspace{8pt}
+I have published **`r length(pubs$Type)`** peer-reviewed journal articles, chapters or books on Environmental Science topics. I have also presented my research at `r length(Talks$Title)` invited talks, and in several national and international conferences. For more information, please visit my [Google Scholar profile](https://scholar.google.com/citations?user=NF5SYm8AAAAJ&hl=en). 
 
 ## Peer reviewed articles
 \vspace{-0.1cm}

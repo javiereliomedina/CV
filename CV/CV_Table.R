@@ -1,4 +1,4 @@
-# Format table for CV ourput
+# Format table for CV output
 
 CV_table <-  function(df) {
   df %>% 
