@@ -103,7 +103,8 @@ source("Escape_latex_specials.R")
            Pub_title   = Escape_latex_specials(Pub_title),
            Pub_journal = Escape_latex_specials(Pub_journal),
            Pub_DOI     = Escape_latex_specials(Pub_DOI),
-           Pub_DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", Pub_DOI, "}",  sep = "")) # Link to the article
+           # Link to the article
+           Pub_DOI = str_c("\\textcolor{blue}{", "\\url{http://dx.doi.org/", Pub_DOI, "}}",  sep = "")) 
 ```
 
 ```{r GS}
