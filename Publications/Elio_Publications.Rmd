@@ -18,6 +18,7 @@ header-includes:
   - \arrayrulecolor{white}
   - \definecolor{darktext}{HTML}{414141}
   - \definecolor{blue}{rgb}{0.0, 0.0, 1.0}
+  - \usepackage{hyperref}
 ---
 
 ```{r setup, include = FALSE}
@@ -102,7 +103,8 @@ source("Escape_latex_specials.R")
            Pub_title   = Escape_latex_specials(Pub_title),
            Pub_journal = Escape_latex_specials(Pub_journal),
            Pub_DOI     = Escape_latex_specials(Pub_DOI),
-           Pub_DOI = str_c("\\textcolor{blue}{", "http://dx.doi.org/", Pub_DOI, "}",  sep = "")) # Link to the article
+           # Link to the article
+           Pub_DOI = str_c("\\textcolor{blue}{", "\\url{http://dx.doi.org/", Pub_DOI, "}}",  sep = ""))
 ```
   
 ```{r GS}
@@ -235,8 +237,9 @@ I have published **`r 1+length(pubs$Pub_type)`** peer-reviewed journal articles,
 \vspace{-0.1cm}
 ```{r books, results = 'asis'}
 
+  # Add document manually 
   A <- tibble(Pub_year = "2019",
-              Pub_details = "European Commission, Joint Research Centre – Cinelli, G., De Cort, M., Tollefsen, T. (Eds.): European Atlas of Natural Radiation, Publication Office of the European Union, Luxembourg, 2019. ISBN 978-92-76-08259-0, Catalogue number KJ-02-19-425-EN-C, EUR 19425 EN. Printed by Bietlot in Belgium 2019 – 190 pp. – 30.1 cm— 42.4 cm, \\textcolor{blue}{http://dx.doi.org/10.2760/520053}.") # Add document manually 
+              Pub_details = "European Commission, Joint Research Centre – Cinelli, G., De Cort, M., Tollefsen, T. (Eds.): European Atlas of Natural Radiation, Publication Office of the European Union, Luxembourg, 2019. ISBN 978-92-76-08259-0, Catalogue number KJ-02-19-425-EN-C, EUR 19425 EN. Printed by Bietlot in Belgium 2019 – 190 pp. – 30.1 cm— 42.4 cm, \\textcolor{blue}{\\url{http://dx.doi.org/10.2760/520053}}.")  
   
   B <- pubs %>%
     filter(Pub_type == "book") %>%
