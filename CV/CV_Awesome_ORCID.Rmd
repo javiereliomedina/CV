@@ -21,6 +21,7 @@ header-includes:
 ---
 
 ```{r setup, include = FALSE}
+
 knitr::opts_chunk$set(echo = FALSE,
                       warning = FALSE,
                       message = FALSE)
@@ -30,9 +31,13 @@ library(knitr)
 library(kableExtra)
 library(rorcid)
 library(rcrossref)
+library(urltools)
+library(Rcpp)
   
 source("CV_table.R")
 source("Escape_latex_specials.R")
+source("Format_ORCID.R")
+
 ```
 
 ```{r ORCID_Works}
@@ -43,7 +48,7 @@ source("Escape_latex_specials.R")
 # Restart the R session
 # We can see the key with Sys.getenv("ORCID_TOKEN")
 
-# When possible I choose "Scopus - Elsevier" as the "Preferred Source" and delate the rest
+# When possible I choose "Scopus - Elsevier" as the "Preferred Source" and delete the rest
 # that way all articles will have the same format
 
 # Get works
@@ -163,28 +168,9 @@ My research interests are:
 
 ```{r Education,  results = 'asis'}
 
-  orcid_educations(id)[[id]] %>%
-    pluck("affiliation-group", "summaries") %>% 
-    bind_rows() %>% 
-    select("education-summary.start-date.year.value",
-           "education-summary.end-date.year.value",
-           "education-summary.role-title",
-           "education-summary.organization.name",
-           "education-summary.organization.address.city",
-           "education-summary.organization.address.country") %>% 
-    rename(Year_Start = "education-summary.start-date.year.value",
-           Year_End   = "education-summary.end-date.year.value",
-           Title      = "education-summary.role-title",
-           Uni        = "education-summary.organization.name",
-           City       = "education-summary.organization.address.city",
-           Country    = "education-summary.organization.address.country") %>% 
-    mutate(Year_End = str_sub(Year_End, -2), 
-           Title = bold_text(Title)) %>%
-    unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
-    unite(Details, Title, Uni, City, Country, sep = ", ", na.rm = TRUE) %>%
-    select(Year, Details) %>%
-    arrange(desc(Year)) %>% 
-    CV_table()
+orcid_educations(id)[[id]] %>%
+  format_ORCID_1 %>% 
+  CV_table()
   
 ```
 
@@ -196,30 +182,9 @@ My research interests are:
 
 ```{r experience, results = 'asis'}
 
-  orcid_employments(id)[[id]] %>%
-    pluck("affiliation-group", "summaries") %>% 
-    bind_rows() %>% 
-    select("employment-summary.start-date.year.value",
-           "employment-summary.end-date.year.value",
-           "employment-summary.role-title",
-           "employment-summary.organization.name",
-           "employment-summary.department-name",
-           "employment-summary.organization.address.city",
-           "employment-summary.organization.address.country") %>% 
-    rename(Year_Start = "employment-summary.start-date.year.value",
-           Year_End   = "employment-summary.end-date.year.value",
-           Role       = "employment-summary.role-title",
-           Company    = "employment-summary.organization.name",
-           Depart     = "employment-summary.department-name",
-           City       = "employment-summary.organization.address.city",
-           Country    = "employment-summary.organization.address.country") %>% 
-    mutate(Year_End = str_sub(Year_End, -2), 
-           Role = bold_text(Role)) %>%
-    unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
-    unite(Details, Role, Company, Depart, City, Country, sep = ", ", na.rm = TRUE) %>% 
-    select(Year, Details) %>%
-    arrange(desc(Year)) %>% 
-    CV_table()
+orcid_employments(id)[[id]] %>%
+  format_ORCID_1 %>% 
+  CV_table()
   
 ```
 
@@ -232,28 +197,7 @@ My research interests are:
 ```{r inv_positions, results = 'asis'}
 
   orcid_invited_positions(id)[[id]] %>%
-    pluck("affiliation-group", "summaries") %>% 
-    bind_rows() %>% 
-    select("invited-position-summary.start-date.year.value",
-           "invited-position-summary.end-date.year.value",
-           "invited-position-summary.role-title",
-           "invited-position-summary.organization.name",
-           "invited-position-summary.department-name",
-           "invited-position-summary.organization.address.city",
-           "invited-position-summary.organization.address.country") %>% 
-    rename(Year_Start = "invited-position-summary.start-date.year.value",
-           Year_End   = "invited-position-summary.end-date.year.value",
-           Role       = "invited-position-summary.role-title",
-           Company    = "invited-position-summary.organization.name",
-           Depart     = "invited-position-summary.department-name",
-           City       = "invited-position-summary.organization.address.city",
-           Country    = "invited-position-summary.organization.address.country") %>% 
-    mutate(Year_End = str_sub(Year_End, -2), 
-           Role = bold_text(Role)) %>%
-    unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
-    unite(Details, Role, Company, Depart, City, Country, sep = ", ", na.rm = TRUE) %>% 
-    select(Year, Details) %>%
-    arrange(desc(Year)) %>% 
+   format_ORCID_1 %>% 
     CV_table()
   
 ```
@@ -267,27 +211,7 @@ My research interests are:
 ```{r memberships, results = 'asis'}
 
   orcid_memberships(id)[[id]] %>%
-    pluck("affiliation-group", "summaries") %>% 
-    bind_rows() %>% 
-    select("membership-summary.start-date.year.value",
-           "membership-summary.end-date",
-           "membership-summary.role-title",
-           "membership-summary.organization.name",
-           "membership-summary.department-name",
-           "membership-summary.organization.address.city",
-           "membership-summary.organization.address.country") %>% 
-    rename(Year_Start = "membership-summary.start-date.year.value",
-           Year_End   = "membership-summary.end-date",
-           Role       = "membership-summary.role-title",
-           Company    = "membership-summary.organization.name",
-           Depart     = "membership-summary.department-name",
-           City       = "membership-summary.organization.address.city",
-           Country    = "membership-summary.organization.address.country") %>% 
-    mutate(Company = bold_text(Company)) %>%
-    unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
-    unite(Details, Company, Depart, City, Country, sep = ", ", na.rm = TRUE) %>%
-    select(Year, Details) %>%
-    arrange(desc(Year)) %>% 
+    format_ORCID_2() %>% 
     CV_table() 
   
 ```
@@ -300,30 +224,9 @@ My research interests are:
 
 ```{r Services, results = 'asis'}
 
-  orcid_services(id)[[id]] %>%
-    pluck("affiliation-group", "summaries") %>% 
-    bind_rows() %>% 
-    select("service-summary.start-date.year.value",
-           "service-summary.end-date.year.value",
-           "service-summary.role-title",
-           "service-summary.organization.name",
-           "service-summary.department-name",
-           "service-summary.organization.address.city",
-           "service-summary.organization.address.country") %>% 
-    rename(Year_Start = "service-summary.start-date.year.value",
-           Year_End   = "service-summary.end-date.year.value",
-           Role       = "service-summary.role-title",
-           Company    = "service-summary.organization.name",
-           Depart     = "service-summary.department-name",
-           City       = "service-summary.organization.address.city",
-           Country    = "service-summary.organization.address.country") %>% 
-    mutate(Year_End = str_sub(Year_End, -2), 
-           Company = bold_text(Company)) %>%
-    unite(Year, Year_Start, Year_End, sep = "-", na.rm = TRUE) %>% 
-    unite(Details, Company, Depart, City, Country, sep = ", ", na.rm = TRUE) %>% 
-    select(Year, Details) %>%
-    arrange(desc(Year)) %>% 
-    CV_table()
+orcid_services(id)[[id]] %>%
+  format_ORCID_1() %>% 
+  CV_table()
   
 ```
 
