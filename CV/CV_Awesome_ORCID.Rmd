@@ -31,9 +31,7 @@ library(knitr)
 library(kableExtra)
 library(rorcid)
 library(rcrossref)
-library(urltools)
-library(Rcpp)
-  
+
 source("CV_table.R")
 source("Escape_latex_specials.R")
 source("Format_ORCID.R")
