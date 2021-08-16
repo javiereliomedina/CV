@@ -167,7 +167,7 @@ My research interests are:
 ```{r Education,  results = 'asis'}
 
 orcid_educations(id)[[id]] %>%
-  format_ORCID_1 %>% 
+  format_ORCID_edu() %>% 
   CV_table()
   
 ```
@@ -181,7 +181,7 @@ orcid_educations(id)[[id]] %>%
 ```{r experience, results = 'asis'}
 
 orcid_employments(id)[[id]] %>%
-  format_ORCID_1 %>% 
+  format_ORCID_eis() %>% 
   CV_table()
   
 ```
@@ -194,9 +194,9 @@ orcid_employments(id)[[id]] %>%
 
 ```{r inv_positions, results = 'asis'}
 
-  orcid_invited_positions(id)[[id]] %>%
-   format_ORCID_1 %>% 
-    CV_table()
+orcid_invited_positions(id)[[id]] %>%
+  format_ORCID_eis() %>% 
+  CV_table()
   
 ```
 
@@ -209,7 +209,7 @@ orcid_employments(id)[[id]] %>%
 ```{r memberships, results = 'asis'}
 
   orcid_memberships(id)[[id]] %>%
-    format_ORCID_2() %>% 
+    format_ORCID_memb() %>% 
     CV_table() 
   
 ```
@@ -223,7 +223,7 @@ orcid_employments(id)[[id]] %>%
 ```{r Services, results = 'asis'}
 
 orcid_services(id)[[id]] %>%
-  format_ORCID_1() %>% 
+  format_ORCID_eis() %>% 
   CV_table()
   
 ```
