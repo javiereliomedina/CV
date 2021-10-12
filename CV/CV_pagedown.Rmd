@@ -1,0 +1,279 @@
+---
+title: "Javier's resume"
+author: Javier Elío
+date: "`r Sys.Date()`"
+output:
+  pagedown::html_resume:
+    # set it to true for a self-contained HTML page but it'll take longer to render
+    self_contained: false
+# uncomment this line to produce HTML and PDF in RStudio:
+knit: pagedown::chrome_print
+---
+
+```{r, echo=FALSE}
+
+My_GS <- scholar::get_profile("NF5SYm8AAAAJ&hl") 
+
+```
+
+```{css, echo=FALSE}
+.extra-sidebar {
+  top: 0;
+  padding-top: 0;
+}
+
+.extra-sidebar h1 {
+  display: none;
+}
+
+.extra-sidebar .level2:first-of-type {
+  margin-top: 0;
+}
+```
+
+Aside
+================================================================================
+
+Contact Info {#contact}
+--------------------------------------------------------------------------------
+
+- <i class="fa fa-envelope"></i> javiereliomedina@gmail.com
+- <i class="fa fa-github"></i> [github.com/javiereliomedina](https://github.com/javiereliomedina)
+- <i class="fa fa-linkedin"></i> [javiereliomedina](https://www.linkedin.com/in/javiereliomedina/)
+- <i class="fa fa-home"></i> [javierelio.netlify.app](https://javierelio.netlify.app/)
+- <i class="fa fa-twitter"></i> [twitter.com/elio_javi](https://twitter.com/elio_javi)
+- <i class="fa fa-phone"></i> +45 9940 2529
+- For more information, please contact me via email.
+
+
+Skills {#skills}
+--------------------------------------------------------------------------------
+
+Experienced in statistics, spatial data analysis, and geostatistics.
+
+Geographic information systems.
+
+Highly skilled in R, R Markdown, blogdown, and bookdown.
+
+Languages {#languages}
+--------------------------------------------------------------------------------
+
+Spanish: mother tongue.
+
+English: fluent. It has been my everyday work language since 2016.
+
+
+Main
+================================================================================
+
+Javier Elío {#title}
+--------------------------------------------------------------------------------
+
+I am an engineer with 10+ years of research and teaching experience, with a solid background in statistics, spatial data analysis, and modelling. My main research area is environmental science, with a particular interest in natural hazards and climate change.
+
+
+Education {data-icon=graduation-cap data-concise=true}
+--------------------------------------------------------------------------------
+
+### Technical University of Madrid
+
+Ph.D.in Environmental Science
+
+Madrid, Spain
+
+2013
+
+### Technical University of Madrid
+
+M.Sc. in Environmental Research, Modelling and Risk Assessment
+
+Madrid, Spain
+
+2009
+
+### Technical University of Madrid
+
+M.Eng. in Mining Engineering. Specialization: Natural Resources and Environment Management
+
+Madrid, Spain
+
+2005
+
+Employment {data-icon=suitcase}
+--------------------------------------------------------------------------------
+
+### Assistant Professor / Postdoc
+
+Aalborg University, Technical Faculty of IT and Design, Department of Planning 
+
+Copenhagen, Denmark
+
+2020
+
+### Assistant Professor
+
+Western Norway University of Applied Sciences, Department of Safety, Chemistry and Biomedical laboratory sciences
+
+Haugesund, Norway
+
+2019
+
+### Postdoctoral Research Fellow
+
+Trinity College Dublin, Geology
+
+Dublin, Ireland
+
+2016
+
+### Research Assistant,
+
+Technical University of Madrid, School of Mining and Energy Engineering
+
+Madrid, Spain
+
+2014
+
+### PhD Candidate
+
+Fundación Ciudad de la Energía, CO2 Geological Storage
+
+Ponferrada, Spain
+
+2009
+
+### Research assistant
+
+Technical University of Madrid, School of Mining and Energy Engineering
+
+Madrid, Spain
+
+2007
+
+### Tunnel Engineer
+
+Obrascon Huarte Lain SA, AVE Colmenar‑Soto del Real, Western tunnel (9.5km)
+
+Madrid, Spain
+
+2005
+
+Teaching Experience {data-icon=chalkboard-teacher}
+--------------------------------------------------------------------------------
+
+### Regional Workshop on Development of Radon Maps and the Definition of Radon‑Prone Areas 
+
+Lecturer, International Atomic Energy Agency
+
+Vilnius, Lithuania
+
+2019
+
+### Expert Mission to advice on radon detection, mapping and analysis
+
+Lecturer, International Atomic Energy Agency
+
+Lima, Peru
+
+2018
+
+###  Geological residential field‑school.
+
+Teaching assistant, 10 day geological residential field‑school in SE Spain, Trinity College Dublin, School of Natural Sciences, Geology
+
+Dublin, Spain
+
+2018
+
+### GIS module in MSc Environmental Science.
+
+Lecturer: A new indoor radon risk map of Ireland. Geology, School of Natural Sciences, Trinity College Dublin, School of Natural Sciences, Geology
+
+Dublin, Ireland
+
+2017
+
+###  Geological residential field‑school.
+
+Teaching assistant, 10 day geological residential field‑school in SE Spain, Trinity College Dublin, School of Natural Sciences, Geology
+
+Dublin, Spain
+
+2016
+
+
+Selected Publications {data-icon=file}
+--------------------------------------------------------------------------------
+
+### Application of airborne radiometric surveys for large‑scale geogenic radon potential classification 
+
+Journal of the European Radon Association
+
+N/A
+
+2020
+
+<i class="fa fa-link"></i> http://dx.doi.org/10.35815/radon.v1.4358 
+
+### The first version of the Pan‑European Indoor Radon Map
+
+Natural Hazards and Earth System Sciences
+
+N/A
+
+2019
+
+<i class="fa fa-link"></i> http://dx.doi.org/10.5194/nhess-19-2451-2019
+
+### Estimation of residential radon exposure and definition of Radon Priority Areas based on expected lung cancer incidence
+
+Environment International
+
+N/A
+
+2018
+
+<i class="fa fa-link"></i> http://dx.doi.org/10.1016/j.envint.2018.02.025
+
+### Logistic regression model for detecting radon prone areas in Ireland
+
+Science of the Total Environment
+
+N/A
+
+2017
+
+<i class="fa fa-link"></i> http://dx.doi.org/10.1016/j.scitotenv.2017.05.071
+
+### >`r round(scholar::get_num_articles(My_GS$id), -1)` scientific documents, `r My_GS$total_cites` citations, h-index: `r My_GS$h_index`
+
+<i class="fa fa-link"></i> [scholar/javierelio](https://scholar.google.com/citations?user=NF5SYm8AAAAJ&hl=en)
+
+Disclaimer {#disclaimer style="width: var(--sidebar-width); padding-left: var(--sidebar-horizontal-padding);"}
+--------------------------------------------------------------------------------
+
+This resume was made with the R package [**pagedown**](https://github.com/rstudio/pagedown).
+
+Last updated on `r Sys.Date()`.
+
+
+Second page sidebar {.aside .extra-sidebar}
+================================================================================
+
+R packages {#packages}
+--------------------------------------------------------------------------------
+
+**dangeo**: package for accessing the Map Supply Download via the kortforsyningen FTP. https://github.com/javiereliomedina/dangeo.git
+
+**ggpyramid**: function for plotting population pyramids in {ggplot2}. https://github.com/javiereliomedina/ggpyramid.git
+
+**ggrugby**: functions for plotting rugby events in {ggplot2}. https://github.com/javiereliomedina/ggrugby.git
+
+**safecastR**: interacting with the Safecast API. https://github.com/javiereliomedina/safecastR.git
+
+
+Shiny apps {#shiny}
+--------------------------------------------------------------------------------
+
+Analyse migration data from Statistic Denmark. https://javierelio.shinyapps.io/DK_migr_app/
+
