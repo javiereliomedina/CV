@@ -161,7 +161,7 @@ hazards and climate change. Nowadays, I am postdoc in Geoinformatics on Migratio
 
 My research interests are:
 
--   Naturalhazards and climate change
+-   Natural hazards and climate change
 -   Environmental risk assessment
 -   Statistics, spatial data analysis, and geostatistics
 -   Geographic information systems
