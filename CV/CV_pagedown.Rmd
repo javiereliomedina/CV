@@ -263,7 +263,7 @@ Second page sidebar {.aside .extra-sidebar}
 R packages {#packages}
 --------------------------------------------------------------------------------
 
-**dangeo**: package for accessing the Map Supply Download via the kortforsyningen FTP. https://github.com/javiereliomedina/dangeo.git
+**dangeo**: package for accessing the Danish Map Supply Download via the kortforsyningen FTP. https://github.com/javiereliomedina/dangeo.git
 
 **ggpyramid**: function for plotting population pyramids in {ggplot2}. https://github.com/javiereliomedina/ggpyramid.git
 
