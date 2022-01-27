@@ -7,10 +7,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <meta name="author" content="Javier Elío" />
-    <meta name="date" content="2021-10-21" />
+    <meta name="date" content="2022-01-27" />
     <title>Javier’s resume</title>
 
-    
+            <!-- dynamically load mathjax for compatibility with self-contained -->
+    <script>
+    (function() {
+      // Retrieve previous config object if defined
+      window.PagedConfig = window.PagedConfig || {};
+      let beforePaged = PagedConfig.before;
+      window.PagedConfig.before = async () => {
+        if (beforePaged) await beforePaged();
+        return new Promise((resolve, reject) => {
+          var script = document.createElement("script");
+          script.type = "text/javascript";
+          var src = `https://mathjax.rstudio.com/latest/MathJax.js` + "?config=TeX-MML-AM_CHTML";
+          if (location.protocol !== "file:" && /^https?:/.test(src))
+            src = src.replace(/^https?:/, '');
+          script.src = src;
+          window.MathJax = {
+            AuthorInit: () => {
+              MathJax.Hub.Register.StartupHook("Begin", () => {
+                MathJax.Hub.Queue(resolve);
+              });
+            }
+          };
+          document.getElementsByTagName("head")[0].appendChild(script);
+        });
+      };
+    })();
+    </script>
+        
         <script src="CV_pagedown_files/header-attrs-2.11/header-attrs.js"></script>
         <link href="CV_pagedown_files/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
         <link href="CV_pagedown_files/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
@@ -67,7 +94,7 @@
 <h1>Main</h1>
 <div id="title" class="section level2">
 <h2>Javier Elío</h2>
-<p>I am an engineer with 10+ years of research and teaching experience, with a solid background in statistics, spatial data analysis, and modelling. My main research area is environmental science, with a particular interest in natural hazards and climate change.</p>
+<p>I am an engineer with 15+ years of research and teaching experience, with a solid background in statistics, spatial data analysis, and modelling. My main research area is environmental science, with a particular interest in natural hazards and climate change.</p>
 </div>
 <div id="education" class="section level2" data-icon="graduation-cap" data-concise="true">
 <h2>Education</h2>
@@ -118,7 +145,7 @@
 </div>
 <div id="phd-candidate" class="section level3">
 <h3>PhD Candidate</h3>
-<p>Fundación Ciudad de la Energía, CO2 Geological Storage</p>
+<p>Fundación Ciudad de la Energía, <span class="math inline">\(CO_2\)</span> Geological Storage</p>
 <p>Ponferrada, Spain</p>
 <p>2009</p>
 </div>
@@ -130,7 +157,7 @@
 </div>
 <div id="tunnel-engineer" class="section level3">
 <h3>Tunnel Engineer</h3>
-<p>Obrascon Huarte Lain SA, AVE Colmenar‑Soto del Real, Western tunnel (9.5km)</p>
+<p>Obrascon Huarte Lain SA, AVE Colmenar‑Soto del Real.</p>
 <p>Madrid, Spain</p>
 <p>2005</p>
 </div>
@@ -198,15 +225,15 @@
 <p>2017</p>
 <p><i class="fa fa-link"></i> <a href="http://dx.doi.org/10.1016/j.scitotenv.2017.05.071" class="uri">http://dx.doi.org/10.1016/j.scitotenv.2017.05.071</a></p>
 </div>
-<div id="scientific-documents-306-citations-h-index-11" class="section level3">
-<h3>&gt;50 scientific documents, 306 citations, h-index: 11</h3>
+<div id="scientific-documents-331-citations-h-index-12" class="section level3">
+<h3>&gt;50 scientific documents, 331 citations, h-index: 12</h3>
 <p><i class="fa fa-link"></i> <a href="https://scholar.google.com/citations?user=NF5SYm8AAAAJ&amp;hl=en">scholar/javierelio</a></p>
 </div>
 </div>
 <div id="disclaimer" class="section level2" style="width: var(--sidebar-width); padding-left: var(--sidebar-horizontal-padding);">
 <h2>Disclaimer</h2>
 <p>This resume was made with the R package <a href="https://github.com/rstudio/pagedown"><strong>pagedown</strong></a>.</p>
-<p>Last updated on 2021-10-21.</p>
+<p>Last updated on 2022-01-27.</p>
 </div>
 </div>
 <div id="second-page-sidebar" class="section level1 aside extra-sidebar">
@@ -220,6 +247,7 @@
 </div>
 <div id="shiny" class="section level2">
 <h2>Shiny apps</h2>
+<p>Build data-driven CVs from Excel files. <a href="https://javierelio.shinyapps.io/cv_app/" class="uri">https://javierelio.shinyapps.io/cv_app/</a></p>
 <p>Analyse migration data from Statistic Denmark. <a href="https://javierelio.shinyapps.io/DK_migr_app/" class="uri">https://javierelio.shinyapps.io/DK_migr_app/</a></p>
 </div>
 </div>

@@ -69,8 +69,7 @@ Main
 Javier Elío {#title}
 --------------------------------------------------------------------------------
 
-I am an engineer with 10+ years of research and teaching experience, with a solid background in statistics, spatial data analysis, and modelling. My main research area is environmental science, with a particular interest in natural hazards and climate change.
-
+I am an engineer with 15+ years of research and teaching experience, with a solid background in statistics, spatial data analysis, and modelling. My main research area is environmental science, with a particular interest in natural hazards and climate change.
 
 Education {data-icon=graduation-cap data-concise=true}
 --------------------------------------------------------------------------------
@@ -136,7 +135,7 @@ Madrid, Spain
 
 ### PhD Candidate
 
-Fundación Ciudad de la Energía, CO2 Geological Storage
+Fundación Ciudad de la Energía, $CO_2$ Geological Storage
 
 Ponferrada, Spain
 
@@ -152,7 +151,7 @@ Madrid, Spain
 
 ### Tunnel Engineer
 
-Obrascon Huarte Lain SA, AVE Colmenar‑Soto del Real, Western tunnel (9.5km)
+Obrascon Huarte Lain SA, AVE Colmenar‑Soto del Real.
 
 Madrid, Spain
 
@@ -274,6 +273,8 @@ R packages {#packages}
 
 Shiny apps {#shiny}
 --------------------------------------------------------------------------------
+
+Build data-driven CVs from Excel files. https://javierelio.shinyapps.io/cv_app/
 
 Analyse migration data from Statistic Denmark. https://javierelio.shinyapps.io/DK_migr_app/
 
