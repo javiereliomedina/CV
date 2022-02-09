@@ -120,6 +120,8 @@ source("Format_ORCID.R")
 
 teching <- tribble(~Year, ~Role, ~City, ~Country, ~Description, ~Uni, ~Type,
                    
+2022, "Lecturer", "Copenhagen", "DK", "Geospatial Information Technology: Spatial Data Science 1. A hands-on data science session in Python to train your skills in data science-related tasks", "Aalborg University", "Lectures",  
+                   
 2017,	"External PhD examiner",	"Madrid", "ES",	"Thesis: “Integration of remote sensing and statistical techniques for detecting CO2 leaks in geological storage areas through the study of natural analogues, Miguel A. Rincones Salinas", "Technical University of Madrid",	"PhD Examiner",
 
 2017,	"Co-supervisor of a Master thesis in Environmental Sciences",	"Dublin", "IE",	"Assessing the contribution of Quaternary deposits to the soil radon budget in Ireland", "Trinity College Dublin, School of Natural Sciences, Geology", "Supervision",
@@ -154,10 +156,7 @@ teching <- tribble(~Year, ~Role, ~City, ~Country, ~Description, ~Uni, ~Type,
 
 \vspace{-0.1cm}
 
-I am an engineer with 10+ years of research and teaching experience, with a
-solid background in statistics, spatial data analysis, and modelling. My main
-research area is environmental science, with a particular interest in natural
-hazards and climate change. Nowadays, I am postdoc in Geoinformatics on Migration Modelling at Aalborg University (Denmark), and member of the research group Applied Marine Microbiology at Høgskulen på Vestlandet (Norway).
+I am an engineer with 15+ years of research and teaching experience, with a solid background in statistics, spatial data analysis, and modelling. My main research area is environmental science, with a particular interest in natural hazards and climate change. Nowadays, I am postdoc in Geoinformatics on Migration Modelling at Aalborg University (Denmark), and member of the research group Applied Marine Microbiology at Høgskulen på Vestlandet (Norway).
 
 My research interests are:
 
